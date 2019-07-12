@@ -9,8 +9,15 @@
 import UIKit
 
 class CardView: UIView {
-    
+    public var cardViewModel: CardViewModel! {
+        didSet {
+            imageView.image = UIImage(named: cardViewModel.imageName)
+            informationLabel.attributedText = cardViewModel.attributedText
+            informationLabel.textAlignment = cardViewModel.textAligment
+        }
+    }
     fileprivate let imageView = UIImageView(image: #imageLiteral(resourceName: "lady5c"))
+    fileprivate let informationLabel = UILabel(text: "Information", font: .systemFont(ofSize: 30, weight: .heavy), numberOfLines: 2, textColor: .white)
     fileprivate let threshold: CGFloat = 100
     
     override init(frame: CGRect) {
@@ -19,6 +26,8 @@ class CardView: UIView {
         clipsToBounds = true
         addSubview(imageView)
         imageView.fillSuperview()
+        addSubview(informationLabel)
+        informationLabel.addConsctraints(leadingAnchor, trailingAnchor, nil, bottomAnchor, .init(top: 0, left: 16, bottom: 16, right: 16))
         let panGesture = UIPanGestureRecognizer(target: self, action: #selector(handlePan))
         addGestureRecognizer(panGesture)
     }
@@ -44,15 +53,17 @@ class CardView: UIView {
     fileprivate func handleEnded(_ gesture: UIPanGestureRecognizer) {
         let isShouldDismiss = abs(gesture.translation(in: self).x) > threshold
         let direction: CGFloat = gesture.translation(in: self).x > 0 ? 1 : -1
-        UIView.animate(withDuration: 0.75, delay: 0, usingSpringWithDamping: 0.6, initialSpringVelocity: 0.6, options: .curveEaseOut, animations: {
+        UIView.animate(withDuration: 0.75, delay: 0, usingSpringWithDamping: 0.6, initialSpringVelocity: 0.1, options: .curveEaseOut, animations: {
             if isShouldDismiss {
-                self.frame = CGRect(x: 1000 * direction, y: 0, width: self.frame.width, height: self.frame.height)
+                self.frame = CGRect(x: 600 * direction, y: 0, width: self.frame.width, height: self.frame.height)
             } else {
                 self.transform = .identity
             }
         }, completion: { (_) in
+            if isShouldDismiss {
+                self.removeFromSuperview()
+            }
             self.transform = .identity
-            self.frame = CGRect(x: 0, y: 0, width: self.superview!.frame.width, height: self.superview!.frame.height)
         })
     }
     

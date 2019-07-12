@@ -17,6 +17,8 @@
 		EDDA39EB22D7F7D80073AC2E /* HeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDDA39EA22D7F7D80073AC2E /* HeaderView.swift */; };
 		EDDA39ED22D7FA640073AC2E /* BottomView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDDA39EC22D7FA640073AC2E /* BottomView.swift */; };
 		EDDA39F022D803980073AC2E /* CardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDDA39EF22D803980073AC2E /* CardView.swift */; };
+		EDDA39F322D8124C0073AC2E /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDDA39F222D8124C0073AC2E /* User.swift */; };
+		EDDA39F622D81C9D0073AC2E /* CardViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDDA39F522D81C9D0073AC2E /* CardViewModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -32,6 +34,8 @@
 		EDDA39EA22D7F7D80073AC2E /* HeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeaderView.swift; sourceTree = "<group>"; };
 		EDDA39EC22D7FA640073AC2E /* BottomView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomView.swift; sourceTree = "<group>"; };
 		EDDA39EF22D803980073AC2E /* CardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardView.swift; sourceTree = "<group>"; };
+		EDDA39F222D8124C0073AC2E /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
+		EDDA39F522D81C9D0073AC2E /* CardViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardViewModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -65,6 +69,8 @@
 			isa = PBXGroup;
 			children = (
 				EDDA39E622D7EC3C0073AC2E /* Helpers+Extensions */,
+				EDDA39F422D81C890073AC2E /* ViewModels */,
+				EDDA39F122D812300073AC2E /* Model */,
 				EDDA39E922D7F7B30073AC2E /* Views */,
 				EDDA39EE22D800E10073AC2E /* Controllers */,
 				EDDA39D122D7EBF50073AC2E /* AppDelegate.swift */,
@@ -101,6 +107,22 @@
 				EDDA39D322D7EBF50073AC2E /* HomeController.swift */,
 			);
 			path = Controllers;
+			sourceTree = "<group>";
+		};
+		EDDA39F122D812300073AC2E /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				EDDA39F222D8124C0073AC2E /* User.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		EDDA39F422D81C890073AC2E /* ViewModels */ = {
+			isa = PBXGroup;
+			children = (
+				EDDA39F522D81C9D0073AC2E /* CardViewModel.swift */,
+			);
+			path = ViewModels;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -178,9 +200,11 @@
 				EDDA39EB22D7F7D80073AC2E /* HeaderView.swift in Sources */,
 				EDDA39D422D7EBF50073AC2E /* HomeController.swift in Sources */,
 				EDDA39E822D7EC4E0073AC2E /* Helpers+Extensions.swift in Sources */,
+				EDDA39F322D8124C0073AC2E /* User.swift in Sources */,
 				EDDA39ED22D7FA640073AC2E /* BottomView.swift in Sources */,
 				EDDA39D222D7EBF50073AC2E /* AppDelegate.swift in Sources */,
 				EDDA39DA22D7EBF50073AC2E /* Tinder_Copy.xcdatamodeld in Sources */,
+				EDDA39F622D81C9D0073AC2E /* CardViewModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
