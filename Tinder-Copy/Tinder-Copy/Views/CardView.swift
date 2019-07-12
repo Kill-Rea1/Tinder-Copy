@@ -17,23 +17,45 @@ class CardView: UIView {
         }
     }
     fileprivate let imageView = UIImageView(image: #imageLiteral(resourceName: "lady5c"))
+    fileprivate let gradientLayer = CAGradientLayer()
     fileprivate let informationLabel = UILabel(text: "Information", font: .systemFont(ofSize: 30, weight: .heavy), numberOfLines: 2, textColor: .white)
     fileprivate let threshold: CGFloat = 100
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        layer.cornerRadius = 10
-        clipsToBounds = true
-        addSubview(imageView)
-        imageView.fillSuperview()
-        addSubview(informationLabel)
-        informationLabel.addConsctraints(leadingAnchor, trailingAnchor, nil, bottomAnchor, .init(top: 0, left: 16, bottom: 16, right: 16))
+        setupLayout()
         let panGesture = UIPanGestureRecognizer(target: self, action: #selector(handlePan))
         addGestureRecognizer(panGesture)
     }
     
+    fileprivate func setupLayout() {
+        layer.cornerRadius = 10
+        clipsToBounds = true
+        imageView.contentMode = .scaleAspectFill
+        addSubview(imageView)
+        setupGradientLayer()
+        imageView.fillSuperview()
+        addSubview(informationLabel)
+        informationLabel.addConsctraints(leadingAnchor, trailingAnchor, nil, bottomAnchor, .init(top: 0, left: 16, bottom: 16, right: 16))
+    }
+    
+    fileprivate func setupGradientLayer() {
+        gradientLayer.colors = [UIColor.clear.cgColor, UIColor.black.cgColor]
+        gradientLayer.locations = [0.6, 1.1]
+        gradientLayer.frame = CGRect(x: 0, y: 0, width: 300, height: 400)
+        layer.addSublayer(gradientLayer)
+    }
+    
+    override func layoutSubviews() {
+        gradientLayer.frame = self.frame
+    }
+    
     @objc fileprivate func handlePan(gesture: UIPanGestureRecognizer) {
         switch gesture.state {
+        case .began:
+            superview?.subviews.forEach({ (subview) in
+                subview.layer.removeAllAnimations()
+            })
         case .changed:
             handleChanged(gesture)
         case .ended:

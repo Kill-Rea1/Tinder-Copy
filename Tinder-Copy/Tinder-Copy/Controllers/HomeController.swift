@@ -14,10 +14,15 @@ class HomeController: UIViewController {
     fileprivate let cardsDeckView = UIView()
     fileprivate let bottomView = BottomView()
     
-    let cardViewModels = [
-        User(name: "Kelly", age: 23, profession: "Music DJ", imageName: "lady5c").toCardViewModel(),
-        User(name: "Jane", age: 18, profession: "Teacher", imageName: "lady4c").toCardViewModel()
-    ]
+    fileprivate let cardViewModels: [CardViewModel] = {
+        let producers = [
+            User(name: "Kelly", age: 23, profession: "Music DJ", imageName: "lady5c"),
+            User(name: "Jane", age: 18, profession: "Teacher", imageName: "lady4c"),
+            Advertiser(title: "Slide Out Menu", brandName: "Lets Build That App", posterName: "poster")
+            ] as [ProducesCardViewModel]
+        let cardViewModels = producers.map({return $0.toCardViewModel()})
+        return cardViewModels
+    }()
     
     override func viewDidLoad() {
         super.viewDidLoad()
