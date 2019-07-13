@@ -134,7 +134,6 @@
 			children = (
 				EDDA39D322D7EBF50073AC2E /* HomeController.swift */,
 				ED8C046422DA557B0009AA2C /* RegistrationController.swift */,
-				ED8C046822DA867A0009AA2C /* RegistrationViewModel.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -151,6 +150,7 @@
 		EDDA39F422D81C890073AC2E /* ViewModels */ = {
 			isa = PBXGroup;
 			children = (
+				ED8C046822DA867A0009AA2C /* RegistrationViewModel.swift */,
 				EDDA39F522D81C9D0073AC2E /* CardViewModel.swift */,
 			);
 			path = ViewModels;
