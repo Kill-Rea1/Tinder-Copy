@@ -17,6 +17,7 @@ class RegistrationController: UIViewController {
         button.setTitleColor(.black, for: .normal)
         button.backgroundColor = .white
         button.constraintHeight(constant: 275)
+        button.constraintWidth(constant: 275)
         button.layer.cornerRadius = 16
         return button
     }()
@@ -24,6 +25,7 @@ class RegistrationController: UIViewController {
     fileprivate let fullNameTextField: CustomTextField = {
         let tf = CustomTextField(padding: 24)
         tf.placeholder = "Enter full name"
+        tf.addTarget(self, action: #selector(handleTextChange), for: .editingChanged)
         return tf
     }()
     
@@ -31,6 +33,7 @@ class RegistrationController: UIViewController {
         let tf = CustomTextField(padding: 24)
         tf.placeholder = "Enter email"
         tf.keyboardType = .emailAddress
+        tf.addTarget(self, action: #selector(handleTextChange), for: .editingChanged)
         return tf
     }()
     
@@ -38,6 +41,7 @@ class RegistrationController: UIViewController {
         let tf = CustomTextField(padding: 24)
         tf.placeholder = "Enter password"
         tf.isSecureTextEntry = true
+        tf.addTarget(self, action: #selector(handleTextChange), for: .editingChanged)
         return tf
     }()
     
@@ -46,15 +50,32 @@ class RegistrationController: UIViewController {
         button.setTitle("Register", for: .normal)
         button.setTitleColor(.white, for: .normal)
         button.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .heavy)
-        button.constraintHeight(constant: 44)
-        button.layer.cornerRadius = 22
-        button.backgroundColor = UIColor(white: 0, alpha: 0.2)
+        button.constraintHeight(constant: 50)
+        button.layer.cornerRadius = 25
+//        button.backgroundColor = UIColor(white: 0, alpha: 0.2)
+        button.backgroundColor = .lightGray
+        button.setTitleColor(.darkGray, for: .disabled)
+        button.isEnabled = false
         return button
     }()
     
-    lazy var stackView = VerticalStackView(arrangedSubviews: [
-        selectPhotoButton, fullNameTextField, emailTextField, passwordTextField, registerButton
-        ], spacing: 8)
+    lazy var verticalStackView: VerticalStackView = {
+        let sv = VerticalStackView(arrangedSubviews: [
+            fullNameTextField,
+            emailTextField,
+            passwordTextField,
+            registerButton], spacing: 8)
+        sv.distribution = .fillEqually
+        return sv
+    }()
+    
+    lazy var stackView = UIStackView(arrangedSubviews: [
+        selectPhotoButton, verticalStackView
+        ], customSpacing: 8)
+    
+    fileprivate let gradientLayer = CAGradientLayer()
+    
+    fileprivate let registrationViewModel = RegistationViewModel()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -63,11 +84,43 @@ class RegistrationController: UIViewController {
         setupLayout()
         setupNotificationsObservers()
         setupTagGesture()
+        setupRegistrationViewModelObserver()
     }
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         NotificationCenter.default.removeObserver(self)
+    }
+    
+    override func viewWillLayoutSubviews() {
+        super.viewWillLayoutSubviews()
+        gradientLayer.frame = view.bounds
+    }
+    
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        if self.traitCollection.verticalSizeClass == .compact {
+            stackView.axis = .horizontal
+        } else {
+            stackView.axis = .vertical
+        }
+    }
+    
+    fileprivate func setupRegistrationViewModelObserver() {
+        registrationViewModel.isFormValidObserver = { [weak self] (isFormValid) in
+            self?.registerButton.isEnabled = isFormValid
+            self?.registerButton.backgroundColor = isFormValid ? UIColor(white: 0, alpha: 0.2) : .lightGray
+        }
+    }
+    
+    @objc fileprivate func handleTextChange(textField: CustomTextField) {
+        switch textField {
+        case fullNameTextField:
+            registrationViewModel.fullName = textField.text
+        case emailTextField:
+            registrationViewModel.email = textField.text
+        default:
+            registrationViewModel.password = textField.text
+        }
     }
     
     fileprivate func setupTagGesture() {
@@ -103,12 +156,11 @@ class RegistrationController: UIViewController {
     }
     
     fileprivate func setupGradientLayer() {
-        let gradientLayer = CAGradientLayer()
         let topColor = #colorLiteral(red: 0.9976429343, green: 0.3786364794, blue: 0.382350862, alpha: 1)
         let bottomColor = #colorLiteral(red: 0.8500358462, green: 0.1086090878, blue: 0.4460129142, alpha: 1)
         gradientLayer.colors = [topColor.cgColor, bottomColor.cgColor]
         gradientLayer.locations = [0, 1]
-        gradientLayer.frame = CGRect(x: 0, y: 0, width: view.frame.width, height: view.frame.height)
+        gradientLayer.frame = view.bounds
         view.layer.addSublayer(gradientLayer)
     }
 }
