@@ -11,8 +11,8 @@ import UIKit
 class HeaderView: UIStackView {
     
     fileprivate let titleImageView = UIImageView(image: #imageLiteral(resourceName: "3 7"))
-    fileprivate let settingsButton = UIButton(image: #imageLiteral(resourceName: "3 6"))
-    fileprivate let messageButton = UIButton(image: #imageLiteral(resourceName: "3 8"))
+    public let settingsButton = UIButton(image: #imageLiteral(resourceName: "3 6"))
+    public let messageButton = UIButton(image: #imageLiteral(resourceName: "3 8"))
     
     override init(frame: CGRect) {
         

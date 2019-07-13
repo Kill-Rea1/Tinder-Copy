@@ -29,11 +29,11 @@ class HomeController: UIViewController {
         view.backgroundColor = .white
         setupStackView()
         setupDummyCards()
-        (bottomView.subviews[0] as! UIButton).addTarget(self, action: #selector(handleRefresh), for: .touchUpInside)
+        headerView.settingsButton.addTarget(self, action: #selector(handleSettings), for: .touchUpInside)
     }
     
-    @objc fileprivate func handleRefresh() {
-        setupDummyCards()
+    @objc fileprivate func handleSettings() {
+        
     }
     
     fileprivate func setupDummyCards() {
