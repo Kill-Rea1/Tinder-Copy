@@ -52,13 +52,51 @@ class RegistrationController: UIViewController {
         return button
     }()
     
+    lazy var stackView = VerticalStackView(arrangedSubviews: [
+        selectPhotoButton, fullNameTextField, emailTextField, passwordTextField, registerButton
+        ], spacing: 8)
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        setupGradientLayer()
-        let stackView = VerticalStackView(arrangedSubviews: [
-            selectPhotoButton, fullNameTextField, emailTextField, passwordTextField, registerButton
-            ], spacing: 8)
         
+        setupGradientLayer()
+        setupLayout()
+        setupNotificationsObservers()
+        setupTagGesture()
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        NotificationCenter.default.removeObserver(self)
+    }
+    
+    fileprivate func setupTagGesture() {
+        view.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleTapDismiss)))
+    }
+    
+    @objc fileprivate func handleTapDismiss() {
+        view.endEditing(true)
+    }
+    
+    fileprivate func setupNotificationsObservers() {
+        NotificationCenter.default.addObserver(self, selector: #selector(handleShowKeyboard), name: UIResponder.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(handleHideKeyboard), name: UIResponder.keyboardWillHideNotification, object: nil)
+    }
+    
+    @objc fileprivate func handleShowKeyboard(notification: Notification) {
+        guard let userInfo = notification.userInfo else { return }
+        guard let value = userInfo[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue else { return }
+        let keyboardFrame = value.cgRectValue
+        let bottomSpace = view.frame.height - stackView.frame.origin.y - stackView.frame.height
+        let difference = keyboardFrame.height - bottomSpace
+        view.transform = CGAffineTransform(translationX: 0, y: -difference - 8)
+    }
+    
+    @objc fileprivate func handleHideKeyboard() {
+        view.transform = .identity
+    }
+    
+    fileprivate func setupLayout() {
         view.addSubview(stackView)
         stackView.addConsctraints(view.leadingAnchor, view.trailingAnchor, nil, nil, .init(top: 0, left: 50, bottom: 0, right: 50))
         stackView.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
