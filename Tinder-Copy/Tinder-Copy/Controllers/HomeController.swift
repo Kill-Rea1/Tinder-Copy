@@ -21,7 +21,6 @@ class HomeController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupStackView()
-//        setupFirestoreUserCards()
         headerView.settingsButton.addTarget(self, action: #selector(handleSettings), for: .touchUpInside)
         bottomView.refreshButton.addTarget(self, action: #selector(handleRefresh), for: .touchUpInside)
         fetchDataFromFirestore()
@@ -45,7 +44,6 @@ class HomeController: UIViewController {
                 self.lastFetchedUser = user
                 self.setupCardFromUser(user: user)
             })
-//            self.setupFirestoreUserCards()
         }
     }
     
@@ -62,7 +60,9 @@ class HomeController: UIViewController {
     }
     
     @objc fileprivate func handleSettings() {
-        
+        let settingsController = SettingsController()
+        let navController = UINavigationController(rootViewController: settingsController)
+        present(navController, animated: true)
     }
     
     fileprivate func setupFirestoreUserCards() {
