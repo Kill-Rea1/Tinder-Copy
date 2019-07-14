@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Firebase
 
 class RegistationViewModel {
     var fullName: String? {
@@ -17,11 +18,59 @@ class RegistationViewModel {
     var email: String? { didSet {checkFormValidity()}}
     var password: String? { didSet {checkFormValidity()}}
     
-    // Reactive programming
-    var isFormValidObserver: ((Bool) -> ())?
+    var bindableImage = Bindable<UIImage>()
+    var bindableIsFormValid = Bindable<Bool>()
+    var bindableIsRegistering = Bindable<Bool>()
+    
+    func performRegistration(completion: @escaping (Error?) -> ()) {
+        guard let email = email else { return }
+        guard let password = password else { return }
+        bindableIsRegistering.value = true
+        Auth.auth().createUser(withEmail: email, password: password) { (res, error) in
+            if let error = error {
+                completion(error)
+                return
+            }
+            self.saveImageToFirebase(completion: completion)
+        }
+    }
+    
+    fileprivate func saveInfoToFirestore(imageUrl: String, completion: @escaping (Error?) -> ()) {
+        guard let uid = Auth.auth().currentUser?.uid else { return }
+        let docData = ["fullName": fullName ?? "", "uid": uid, "imageUrl1": imageUrl]
+        Firestore.firestore().collection("users").document(uid).setData(docData) { (error) in
+            if let error = error {
+                completion(error)
+                return
+            }
+            completion(nil)
+        }
+    }
+    
+    fileprivate func saveImageToFirebase(completion: @escaping ((Error?)->())) {
+        let filename = UUID().uuidString
+        let ref = Storage.storage().reference(withPath: "/images/\(filename)")
+        let imageData = self.bindableImage.value?.jpegData(compressionQuality: 0.75) ?? Data()
+        ref.putData(imageData, metadata: nil, completion: { (_, error) in
+            if let error = error {
+                completion(error)
+                return
+            }
+            ref.downloadURL(completion: { (url, error) in
+                if let error = error {
+                    completion(error)
+                    return
+                }
+                let imageUrl = url?.absoluteString ?? ""
+                self.saveInfoToFirestore(imageUrl: imageUrl, completion: completion)
+                self.bindableIsRegistering.value = false
+                completion(nil)
+            })
+        })
+    }
     
     fileprivate func checkFormValidity() {
         let isFormValid = fullName?.isEmpty == false && email?.isEmpty == false && password?.isEmpty == false
-        isFormValidObserver?(isFormValid)
+        bindableIsFormValid.value = isFormValid
     }
 }

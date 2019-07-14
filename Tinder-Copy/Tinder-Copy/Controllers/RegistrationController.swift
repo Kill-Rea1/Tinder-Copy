@@ -10,7 +10,24 @@ import UIKit
 import Firebase
 import JGProgressHUD
 
+extension RegistrationController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+    
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+        let image = info[.originalImage] as? UIImage
+        registrationViewModel.bindableImage.value = image
+        dismiss(animated: true)
+    }
+    
+    func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
+        dismiss(animated: true)
+    }
+}
+
 class RegistrationController: UIViewController {
+    
+    // MARK:- Properties
+    lazy var selectPhotoButtonWidthAnchor = selectPhotoButton.widthAnchor.constraint(equalToConstant: 275)
+    lazy var selectPhotoButtonHeightAnchor = selectPhotoButton.heightAnchor.constraint(equalToConstant: 275)
     
     fileprivate let selectPhotoButton: UIButton = {
         let button = UIButton(type: .system)
@@ -18,9 +35,10 @@ class RegistrationController: UIViewController {
         button.titleLabel?.font = UIFont.systemFont(ofSize: 34, weight: .heavy)
         button.setTitleColor(.black, for: .normal)
         button.backgroundColor = .white
-        button.constraintHeight(constant: 275)
-        button.constraintWidth(constant: 275)
         button.layer.cornerRadius = 16
+        button.addTarget(self, action: #selector(handleSelectPhoto), for: .touchUpInside)
+        button.imageView?.contentMode = .scaleAspectFill
+        button.clipsToBounds = true
         return button
     }()
     
@@ -52,9 +70,8 @@ class RegistrationController: UIViewController {
         button.setTitle("Register", for: .normal)
         button.setTitleColor(.white, for: .normal)
         button.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .heavy)
-        button.constraintHeight(constant: 50)
-        button.layer.cornerRadius = 25
-//        button.backgroundColor = UIColor(white: 0, alpha: 0.2)
+        button.constraintHeight(constant: 44)
+        button.layer.cornerRadius = 22
         button.backgroundColor = .lightGray
         button.setTitleColor(.darkGray, for: .disabled)
         button.isEnabled = false
@@ -68,17 +85,17 @@ class RegistrationController: UIViewController {
             emailTextField,
             passwordTextField,
             registerButton], spacing: 8)
-        sv.distribution = .fillEqually
         return sv
     }()
     
     lazy var stackView = UIStackView(arrangedSubviews: [
         selectPhotoButton, verticalStackView
         ], customSpacing: 8)
-    
     fileprivate let gradientLayer = CAGradientLayer()
-    
     fileprivate let registrationViewModel = RegistationViewModel()
+    fileprivate let registeringHUD = JGProgressHUD(style: .dark)
+    
+    // MARK:- View methods
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -103,26 +120,38 @@ class RegistrationController: UIViewController {
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         if self.traitCollection.verticalSizeClass == .compact {
             stackView.axis = .horizontal
+            verticalStackView.distribution = .fillEqually
+            selectPhotoButtonHeightAnchor.isActive = false
+            selectPhotoButtonWidthAnchor.isActive = true
         } else {
             stackView.axis = .vertical
+            verticalStackView.distribution = .fill
+            selectPhotoButtonWidthAnchor.isActive = false
+            selectPhotoButtonHeightAnchor.isActive = true
         }
+    }
+    
+    // MARK:- Fileprivate methods
+    
+    @objc fileprivate func handleSelectPhoto() {
+        let imagePickerController = UIImagePickerController()
+        imagePickerController.delegate = self
+        present(imagePickerController, animated: true)
     }
     
     @objc fileprivate func handleRegister() {
         handleTapDismiss()
-        guard let email = emailTextField.text, email != "" else { return }
-        guard let password = passwordTextField.text, password != "" else { return }
-        Auth.auth().createUser(withEmail: email, password: password) { (res, error) in
+        registrationViewModel.performRegistration { [unowned self] (error) in
             if let error = error {
                 self.showHUDWithError(error: error)
                 return
             }
             
-            
         }
     }
     
     fileprivate func showHUDWithError(error: Error) {
+        registeringHUD.dismiss()
         let hud = JGProgressHUD(style: .dark)
         hud.textLabel.text = "Failed registration"
         hud.detailTextLabel.text = error.localizedDescription
@@ -131,9 +160,22 @@ class RegistrationController: UIViewController {
     }
     
     fileprivate func setupRegistrationViewModelObserver() {
-        registrationViewModel.isFormValidObserver = { [weak self] (isFormValid) in
-            self?.registerButton.isEnabled = isFormValid
-            self?.registerButton.backgroundColor = isFormValid ? UIColor(white: 0, alpha: 0.2) : .lightGray
+        registrationViewModel.bindableIsFormValid.bind { [unowned self] (isFormValid) in
+            guard let isFormValid = isFormValid else { return }
+            self.registerButton.isEnabled = isFormValid
+            self.registerButton.backgroundColor = isFormValid ? UIColor(white: 0, alpha: 0.2) : .lightGray
+        }
+        registrationViewModel.bindableImage.bind { [unowned self] (image) in
+            self.selectPhotoButton.setImage(image?.withRenderingMode(.alwaysOriginal), for: .normal)
+        }
+        registrationViewModel.bindableIsRegistering.bind { [unowned self] (isRegistering) in
+            guard let isRegistering = isRegistering else { return }
+            if isRegistering {
+                self.registeringHUD.textLabel.text = "Register"
+                self.registeringHUD.show(in: self.view)
+            } else {
+                self.registeringHUD.dismiss()
+            }
         }
     }
     
