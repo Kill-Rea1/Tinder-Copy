@@ -43,8 +43,10 @@ class CardView: UIView {
     }
     
     fileprivate func setupIndexImageObserver() {
-        cardViewModel.imageIndexObserver = { [weak self] (index, image) in
-            self?.imageView.image = image
+        cardViewModel.imageIndexObserver = { [weak self] (index, imageUrl) in
+            if let url = URL(string: imageUrl ?? "") {
+                self?.imageView.sd_setImage(with: url)
+            }
             self?.barsStackView.arrangedSubviews.forEach({ (v) in
                 v.backgroundColor = self?.barDeselectedColor
             })
@@ -109,8 +111,10 @@ class CardView: UIView {
     
     fileprivate func handleChanged(_ gesture: UIPanGestureRecognizer) {
         let translation = gesture.translation(in: self)
+//        let location = gesture.location(in: self)
         let degrees: CGFloat = translation.x / 20
         let angle = degrees * .pi / 180
+//        let direction: CGFloat = location.y > frame.height / 2 ? -1 : 1
         transform = CGAffineTransform(rotationAngle: angle).translatedBy(x: translation.x, y: translation.y)
     }
     

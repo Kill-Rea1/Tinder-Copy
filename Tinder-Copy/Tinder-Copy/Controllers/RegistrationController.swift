@@ -109,7 +109,7 @@ class RegistrationController: UIViewController {
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        NotificationCenter.default.removeObserver(self)
+//        NotificationCenter.default.removeObserver(self)
     }
     
     override func viewWillLayoutSubviews() {

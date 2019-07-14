@@ -27,7 +27,7 @@ struct User: ProducesCardViewModel{
         let attributedText = NSMutableAttributedString(string: name ?? "", attributes: [.font: UIFont.systemFont(ofSize: 30, weight: .heavy)])
         let ageString = age != nil ? "\(age!)" : "N\\A"
         let professionString = profession != nil ? profession! : "Not available"
-        attributedText.append(NSMutableAttributedString(string: ageString, attributes: [.font: UIFont.systemFont(ofSize: 26, weight: .regular)]))
+        attributedText.append(NSMutableAttributedString(string: " \(ageString)", attributes: [.font: UIFont.systemFont(ofSize: 26, weight: .regular)]))
         attributedText.append(NSMutableAttributedString(string: "\n\(professionString)", attributes: [.font: UIFont.systemFont(ofSize: 20, weight: .regular)]))
         
         return CardViewModel(imageNames: [imageUrl1 ?? ""], attributedText: attributedText, textAligment: .left)
