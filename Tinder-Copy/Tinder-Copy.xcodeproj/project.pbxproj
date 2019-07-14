@@ -15,6 +15,7 @@
 		ED8C046B22DA95C50009AA2C /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = ED8C046A22DA95C50009AA2C /* GoogleService-Info.plist */; };
 		ED8C046D22DAA3580009AA2C /* Bindable.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED8C046C22DAA3580009AA2C /* Bindable.swift */; };
 		ED8C046F22DBB88E0009AA2C /* SettingsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED8C046E22DBB88E0009AA2C /* SettingsController.swift */; };
+		ED8C047122DBD1440009AA2C /* SettingsCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED8C047022DBD1440009AA2C /* SettingsCell.swift */; };
 		EDDA39D222D7EBF50073AC2E /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDDA39D122D7EBF50073AC2E /* AppDelegate.swift */; };
 		EDDA39D422D7EBF50073AC2E /* HomeController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDDA39D322D7EBF50073AC2E /* HomeController.swift */; };
 		EDDA39D722D7EBF50073AC2E /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = EDDA39D522D7EBF50073AC2E /* Main.storyboard */; };
@@ -40,6 +41,7 @@
 		ED8C046A22DA95C50009AA2C /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		ED8C046C22DAA3580009AA2C /* Bindable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Bindable.swift; sourceTree = "<group>"; };
 		ED8C046E22DBB88E0009AA2C /* SettingsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsController.swift; sourceTree = "<group>"; };
+		ED8C047022DBD1440009AA2C /* SettingsCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsCell.swift; sourceTree = "<group>"; };
 		EDDA39CE22D7EBF50073AC2E /* Tinder-Copy.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Tinder-Copy.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		EDDA39D122D7EBF50073AC2E /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		EDDA39D322D7EBF50073AC2E /* HomeController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeController.swift; sourceTree = "<group>"; };
@@ -129,6 +131,7 @@
 				EDDA39EC22D7FA640073AC2E /* BottomView.swift */,
 				EDDA39EF22D803980073AC2E /* CardView.swift */,
 				ED8C046622DA5AAD0009AA2C /* CustomTexttField.swift */,
+				ED8C047022DBD1440009AA2C /* SettingsCell.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -300,6 +303,7 @@
 				ED8C046922DA867A0009AA2C /* RegistrationViewModel.swift in Sources */,
 				EDDA39D222D7EBF50073AC2E /* AppDelegate.swift in Sources */,
 				EDDA39DA22D7EBF50073AC2E /* Tinder_Copy.xcdatamodeld in Sources */,
+				ED8C047122DBD1440009AA2C /* SettingsCell.swift in Sources */,
 				EDDA39F622D81C9D0073AC2E /* CardViewModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

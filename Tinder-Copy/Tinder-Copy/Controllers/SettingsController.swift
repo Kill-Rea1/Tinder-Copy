@@ -7,6 +7,8 @@
 //
 
 import UIKit
+import Firebase
+import SDWebImage
 
 class CustomImagePickerController: UIImagePickerController {
     var imageButton: UIButton?
@@ -21,39 +23,13 @@ extension SettingsController: UIImagePickerControllerDelegate, UINavigationContr
 }
 
 class SettingsController: UITableViewController {
-    
+    fileprivate let padding: CGFloat = 16
+    fileprivate var user: User?
     lazy var image1Button = createButton(selector: #selector(handleSelectPhoto))
     lazy var image2Button = createButton(selector: #selector(handleSelectPhoto))
     lazy var image3Button = createButton(selector: #selector(handleSelectPhoto))
-
-    @objc fileprivate func handleSelectPhoto(sender: UIButton) {
-        let imagePickerController = CustomImagePickerController()
-        imagePickerController.imageButton = sender
-        present(imagePickerController, animated: true)
-    }
-    
-    func createButton(selector: Selector) -> UIButton {
-        let button = UIButton(type: .system)
-        button.setTitle("Select Photo", for: .normal)
-        button.backgroundColor = .white
-        button.addTarget(self, action: selector, for: .touchUpInside)
-        button.imageView?.contentMode = .scaleAspectFill
-        button.layer.cornerRadius = 8
-        button.clipsToBounds = true
-        return button
-    }
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        
-        setupNavigationItems()
-        tableView.backgroundColor = UIColor(white: 0.9, alpha: 1)
-        tableView.tableFooterView = UIView()
-    }
-    
-    override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+    lazy var header: UIView = {
         let header = UIView()
-        let padding: CGFloat = 16
         let verticalStackView = VerticalStackView(arrangedSubviews: [
             image2Button, image3Button
             ], spacing: padding)
@@ -65,14 +41,93 @@ class SettingsController: UITableViewController {
         header.addSubview(stackView)
         stackView.addConsctraints(header.leadingAnchor, header.trailingAnchor, header.topAnchor, header.bottomAnchor, .init(top: padding, left: padding, bottom: padding, right: padding))
         return header
+    }()
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        setupNavigationItems()
+        setupTableView()
+        fetchCurrentUser()
+    }
+    
+    fileprivate func fetchCurrentUser() {
+        guard let uid = Auth.auth().currentUser?.uid else { return }
+        Firestore.firestore().collection("users").document(uid).getDocument { (documentSnapshot, error) in
+            if let error = error {
+                print(error)
+                return
+            }
+            
+            guard let dictionary = documentSnapshot?.data() else { return }
+            self.user = User(dictionary: dictionary)
+            self.loadUserPhotos()
+            self.tableView.reloadData()
+        }
+    }
+    
+    fileprivate func loadUserPhotos() {
+        guard let imageUrl = user?.imageUrl1,  let url = URL(string: imageUrl) else { return }
+        SDWebImageManager.shared.loadImage(with: url, options: .continueInBackground, progress: nil) { [unowned self] (image, _, _, _, _, _) in
+            guard let image = image else { return }
+            self.image1Button.setImage(image.withRenderingMode(.alwaysOriginal), for: .normal)
+        }
+    }
+    
+    class HeaderLabel: UILabel {
+        override func drawText(in rect: CGRect) {
+            super.drawText(in: rect.insetBy(dx: 16, dy: 0))
+        }
+    }
+    
+    override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        if section == 0 {
+            return header
+        }
+        let headerLabel = HeaderLabel(text: "", font: .boldSystemFont(ofSize: 18))
+        switch section {
+        case 1:
+            headerLabel.text = "Name"
+        case 2:
+            headerLabel.text = "Profession"
+        case 3:
+            headerLabel.text = "Age"
+        default:
+            headerLabel.text = "Bio"
+        }
+        return headerLabel
     }
     
     override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return 300
+        return section == 0 ? 300 : 40
     }
     
-    @objc fileprivate func handleCancel() {
-        dismiss(animated: true)
+    override func numberOfSections(in tableView: UITableView) -> Int {
+        return 5
+    }
+    
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return section == 0 ? 0 : 1
+    }
+    
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = SettingsCell(style: .default, reuseIdentifier: nil)
+        switch indexPath.section {
+        case 1:
+            cell.textField.placeholder = "Enter name"
+            cell.textField.text = user?.name
+        case 2:
+            cell.textField.placeholder = "Enter Profession"
+            cell.textField.text = user?.profession
+        case 3:
+            cell.textField.placeholder = "Enter Age"
+            if let age = user?.age {
+                cell.textField.text = String(age)
+            }
+        default:
+            cell.textField.placeholder = "Enter Bio"
+        }
+        return cell
     }
     
     fileprivate func setupNavigationItems() {
@@ -83,5 +138,33 @@ class SettingsController: UITableViewController {
             UIBarButtonItem(title: "Save", style: .plain, target: self, action: #selector(handleCancel)),
             UIBarButtonItem(title: "Logout", style: .plain, target: self, action: #selector(handleCancel))
         ]
+    }
+    
+    @objc fileprivate func handleCancel() {
+        dismiss(animated: true)
+    }
+    
+    fileprivate func createButton(selector: Selector) -> UIButton {
+        let button = UIButton(type: .system)
+        button.setTitle("Select Photo", for: .normal)
+        button.backgroundColor = .white
+        button.addTarget(self, action: selector, for: .touchUpInside)
+        button.imageView?.contentMode = .scaleAspectFill
+        button.layer.cornerRadius = 8
+        button.clipsToBounds = true
+        return button
+    }
+    
+    @objc fileprivate func handleSelectPhoto(sender: UIButton) {
+        let imagePickerController = CustomImagePickerController()
+        imagePickerController.delegate = self
+        imagePickerController.imageButton = sender
+        present(imagePickerController, animated: true)
+    }
+    
+    fileprivate func setupTableView() {
+        tableView.backgroundColor = UIColor(white: 0.9, alpha: 1)
+        tableView.tableFooterView = UIView()
+        tableView.keyboardDismissMode = .interactive
     }
 }
