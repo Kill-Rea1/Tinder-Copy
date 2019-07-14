@@ -7,29 +7,37 @@
 //
 
 import UIKit
+import Firebase
+import SDWebImage
 
 class HomeController: UIViewController {
     
     fileprivate let headerView = HeaderView()
     fileprivate let cardsDeckView = UIView()
     fileprivate let bottomView = BottomView()
-    
-    fileprivate let cardViewModels: [CardViewModel] = {
-        let producers = [
-            Advertiser(title: "Slide Out Menu", brandName: "Lets Build That App", posterName: "poster"),
-            User(name: "Kelly", age: 23, profession: "Music DJ", imageNames: ["kelly1", "kelly2", "kelly3"]),
-            User(name: "Jane", age: 18, profession: "Teacher", imageNames: ["jane1", "jane2", "jane3"])
-            ] as [ProducesCardViewModel]
-        let cardViewModels = producers.map({return $0.toCardViewModel()})
-        return cardViewModels
-    }()
+    fileprivate var cardViewModels = [CardViewModel]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .white
         setupStackView()
         setupDummyCards()
         headerView.settingsButton.addTarget(self, action: #selector(handleSettings), for: .touchUpInside)
+        fetchDataFromFirestore()
+    }
+    
+    fileprivate func fetchDataFromFirestore() {
+        Firestore.firestore().collection("users").getDocuments { (snapshot, error) in
+            if let error = error {
+                print("failed to fetch data:", error)
+                return
+            }
+            snapshot?.documents.forEach({ (documentSnapshot) in
+                let userDictionary = documentSnapshot.data()
+                let user = User(dictionary: userDictionary)
+                self.cardViewModels.append(user.toCardViewModel())
+            })
+            self.setupDummyCards()
+        }
     }
     
     @objc fileprivate func handleSettings() {
@@ -46,6 +54,7 @@ class HomeController: UIViewController {
     }
     
     fileprivate func setupStackView() {
+        view.backgroundColor = .white
         let stackView = VerticalStackView(arrangedSubviews: [
             headerView, cardsDeckView, bottomView
             ])
