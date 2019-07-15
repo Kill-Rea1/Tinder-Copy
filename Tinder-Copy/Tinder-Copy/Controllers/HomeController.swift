@@ -95,15 +95,6 @@ class HomeController: UIViewController {
         present(navController, animated: true)
     }
     
-    fileprivate func setupFirestoreUserCards() {
-        cardViewModels.forEach { (cardViewModel) in
-            let cardView = CardView()
-            cardView.cardViewModel = cardViewModel
-            cardsDeckView.addSubview(cardView)
-            cardView.fillSuperview()
-        }
-    }
-    
     fileprivate func setupStackView() {
         view.backgroundColor = .white
         let stackView = VerticalStackView(arrangedSubviews: [
@@ -116,8 +107,9 @@ class HomeController: UIViewController {
 }
 
 extension HomeController: SettingsControllerDelegate, LoginControllerDelegate, CardViewDelegate {
-    func didTapMoreInfo() {
+    func didTapMoreInfo(cardViewModel: CardViewModel) {
         let userDetailController = UserDetailController()
+        userDetailController.cardViewModel = cardViewModel
         present(userDetailController, animated: true)
     }
     
