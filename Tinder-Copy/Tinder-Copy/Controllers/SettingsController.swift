@@ -18,8 +18,38 @@ class CustomImagePickerController: UIImagePickerController {
 extension SettingsController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
         let selectedImage = info[.originalImage] as? UIImage
-        (picker as! CustomImagePickerController).imageButton?.setImage(selectedImage?.withRenderingMode(.alwaysOriginal), for: .normal)
+        let imageButton = (picker as! CustomImagePickerController).imageButton
+        imageButton?.setImage(selectedImage?.withRenderingMode(.alwaysOriginal), for: .normal)
         dismiss(animated: true)
+        let filename = UUID().uuidString
+        let ref = Storage.storage().reference(withPath: "/images/\(filename)")
+        guard let uploadData = selectedImage?.jpegData(compressionQuality: 0.75) else { return }
+        let hud = JGProgressHUD(style: .dark)
+        hud.textLabel.text = "Uploading image..."
+        hud.indicatorView = JGProgressHUDPieIndicatorView()
+        hud.show(in: view)
+        ref.putData(uploadData, metadata: nil) { (nil, error) in
+            if let error = error {
+                hud.dismiss()
+                print("Failed to upload image to storage:", error)
+                return
+            }
+            ref.downloadURL(completion: { (url, error) in
+                hud.dismiss()
+                if let error = error {
+                    print("Failed to retrieve download url:", error)
+                    return
+                }
+                switch imageButton {
+                case self.image1Button:
+                    self.user?.imageUrl1 = url?.absoluteString
+                case self.image2Button:
+                    self.user?.imageUrl2 = url?.absoluteString
+                default:
+                    self.user?.imageUrl3 = url?.absoluteString
+                }
+            })
+        }
     }
 }
 
@@ -66,12 +96,23 @@ class SettingsController: UITableViewController {
             self.tableView.reloadData()
         }
     }
+    @discardableResult
+    fileprivate func loadImageIntoButton(_ url: URL, _ button: UIButton) -> SDWebImageCombinedOperation? {
+        return SDWebImageManager.shared.loadImage(with: url, options: .continueInBackground, progress: nil) { (image, _, _, _, _, _) in
+            guard let image = image else { return }
+            button.setImage(image.withRenderingMode(.alwaysOriginal), for: .normal)
+        }
+    }
     
     fileprivate func loadUserPhotos() {
-        guard let imageUrl = user?.imageUrl1,  let url = URL(string: imageUrl) else { return }
-        SDWebImageManager.shared.loadImage(with: url, options: .continueInBackground, progress: nil) { [unowned self] (image, _, _, _, _, _) in
-            guard let image = image else { return }
-            self.image1Button.setImage(image.withRenderingMode(.alwaysOriginal), for: .normal)
+        if let imageUrl = user?.imageUrl1,  let url = URL(string: imageUrl) {
+            loadImageIntoButton(url, image1Button)
+        }
+        if let imageUrl = user?.imageUrl2, let url = URL(string: imageUrl) {
+            loadImageIntoButton(url, image2Button)
+        }
+        if let imageUrl = user?.imageUrl3, let url = URL(string: imageUrl) {
+            loadImageIntoButton(url, image3Button)
         }
     }
     
@@ -161,7 +202,9 @@ class SettingsController: UITableViewController {
             "fullName": user?.name ?? "",
             "profession": user?.profession ?? "",
             "age": user?.age ?? -1,
-            "imageUrl1": user?.imageUrl1 ?? ""
+            "imageUrl1": user?.imageUrl1 ?? "",
+            "imageUrl2": user?.imageUrl2 ?? "",
+            "imageUrl3": user?.imageUrl3 ?? ""
         ]
         let hud = JGProgressHUD(style: .dark)
         hud.textLabel.text = "Saving Profiel"
