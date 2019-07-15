@@ -9,6 +9,7 @@
 import UIKit
 import Firebase
 import SDWebImage
+import JGProgressHUD
 
 class CustomImagePickerController: UIImagePickerController {
     var imageButton: UIButton?
@@ -116,11 +117,14 @@ class SettingsController: UITableViewController {
         case 1:
             cell.textField.placeholder = "Enter name"
             cell.textField.text = user?.name
+            cell.textField.addTarget(self, action: #selector(handleNameChange), for: .editingChanged)
         case 2:
             cell.textField.placeholder = "Enter Profession"
             cell.textField.text = user?.profession
+            cell.textField.addTarget(self, action: #selector(handleProfessionChange), for: .editingChanged)
         case 3:
             cell.textField.placeholder = "Enter Age"
+            cell.textField.addTarget(self, action: #selector(handleAgeChange), for: .editingChanged)
             if let age = user?.age {
                 cell.textField.text = String(age)
             }
@@ -130,14 +134,45 @@ class SettingsController: UITableViewController {
         return cell
     }
     
+    @objc fileprivate func handleNameChange(textField: UITextField) {
+        self.user?.name = textField.text
+    }
+    @objc fileprivate func handleProfessionChange(textField: UITextField) {
+        self.user?.profession = textField.text
+    }
+    @objc fileprivate func handleAgeChange(textField: UITextField) {
+        self.user?.age = Int(textField.text ?? "")
+    }
+    
     fileprivate func setupNavigationItems() {
         navigationItem.title = "Settings"
         navigationController?.navigationBar.prefersLargeTitles = true
         navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Cancel", style: .plain, target: self, action: #selector(handleCancel))
         navigationItem.rightBarButtonItems = [
-            UIBarButtonItem(title: "Save", style: .plain, target: self, action: #selector(handleCancel)),
+            UIBarButtonItem(title: "Save", style: .plain, target: self, action: #selector(handleSave)),
             UIBarButtonItem(title: "Logout", style: .plain, target: self, action: #selector(handleCancel))
         ]
+    }
+    
+    @objc fileprivate func handleSave() {
+        guard let uid = Auth.auth().currentUser?.uid else { return }
+        let documentData: [String: Any] = [
+            "uid": uid,
+            "fullName": user?.name ?? "",
+            "profession": user?.profession ?? "",
+            "age": user?.age ?? -1,
+            "imageUrl1": user?.imageUrl1 ?? ""
+        ]
+        let hud = JGProgressHUD(style: .dark)
+        hud.textLabel.text = "Saving Profiel"
+        hud.show(in: view)
+        Firestore.firestore().collection("users").document(uid).setData(documentData) { (error) in
+            hud.dismiss()
+            if let error = error {
+                print(error)
+                return
+            }
+        }
     }
     
     @objc fileprivate func handleCancel() {
