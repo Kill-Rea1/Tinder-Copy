@@ -79,6 +79,15 @@ class RegistrationController: UIViewController {
         return button
     }()
     
+    fileprivate let gotToLoginButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.setTitle("Go to Login", for: .normal)
+        button.setTitleColor(.white, for: .normal)
+        button.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .heavy)
+        button.addTarget(self, action: #selector(handleGoToLogin), for: .touchUpInside)
+        return button
+    }()
+    
     lazy var verticalStackView: VerticalStackView = {
         let sv = VerticalStackView(arrangedSubviews: [
             fullNameTextField,
@@ -132,6 +141,10 @@ class RegistrationController: UIViewController {
     }
     
     // MARK:- Fileprivate methods
+    
+    @objc fileprivate func handleGoToLogin() {
+        navigationController?.popViewController(animated: true)
+    }
     
     @objc fileprivate func handleSelectPhoto() {
         let imagePickerController = UIImagePickerController()
@@ -217,9 +230,12 @@ class RegistrationController: UIViewController {
     }
     
     fileprivate func setupLayout() {
+        navigationController?.isNavigationBarHidden = true
         view.addSubview(stackView)
         stackView.addConsctraints(view.leadingAnchor, view.trailingAnchor, nil, nil, .init(top: 0, left: 50, bottom: 0, right: 50))
         stackView.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
+        view.addSubview(gotToLoginButton)
+        gotToLoginButton.addConsctraints(view.leadingAnchor, view.trailingAnchor, nil, view.safeAreaLayoutGuide.bottomAnchor)
     }
     
     fileprivate func setupGradientLayer() {

@@ -17,6 +17,8 @@
 		ED8C046F22DBB88E0009AA2C /* SettingsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED8C046E22DBB88E0009AA2C /* SettingsController.swift */; };
 		ED8C047122DBD1440009AA2C /* SettingsCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED8C047022DBD1440009AA2C /* SettingsCell.swift */; };
 		ED8C047322DCD26B0009AA2C /* AgeRangeCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED8C047222DCD26B0009AA2C /* AgeRangeCell.swift */; };
+		ED8C047622DCF26A0009AA2C /* LoginController.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED8C047522DCF26A0009AA2C /* LoginController.swift */; };
+		ED8C047822DCF6BC0009AA2C /* LoginViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED8C047722DCF6BC0009AA2C /* LoginViewModel.swift */; };
 		EDDA39D222D7EBF50073AC2E /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDDA39D122D7EBF50073AC2E /* AppDelegate.swift */; };
 		EDDA39D422D7EBF50073AC2E /* HomeController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDDA39D322D7EBF50073AC2E /* HomeController.swift */; };
 		EDDA39D722D7EBF50073AC2E /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = EDDA39D522D7EBF50073AC2E /* Main.storyboard */; };
@@ -44,6 +46,8 @@
 		ED8C046E22DBB88E0009AA2C /* SettingsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsController.swift; sourceTree = "<group>"; };
 		ED8C047022DBD1440009AA2C /* SettingsCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsCell.swift; sourceTree = "<group>"; };
 		ED8C047222DCD26B0009AA2C /* AgeRangeCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AgeRangeCell.swift; sourceTree = "<group>"; };
+		ED8C047522DCF26A0009AA2C /* LoginController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginController.swift; sourceTree = "<group>"; };
+		ED8C047722DCF6BC0009AA2C /* LoginViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewModel.swift; sourceTree = "<group>"; };
 		EDDA39CE22D7EBF50073AC2E /* Tinder-Copy.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Tinder-Copy.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		EDDA39D122D7EBF50073AC2E /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		EDDA39D322D7EBF50073AC2E /* HomeController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeController.swift; sourceTree = "<group>"; };
@@ -143,8 +147,9 @@
 			isa = PBXGroup;
 			children = (
 				EDDA39D322D7EBF50073AC2E /* HomeController.swift */,
-				ED8C046422DA557B0009AA2C /* RegistrationController.swift */,
 				ED8C046E22DBB88E0009AA2C /* SettingsController.swift */,
+				ED8C046422DA557B0009AA2C /* RegistrationController.swift */,
+				ED8C047522DCF26A0009AA2C /* LoginController.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -161,8 +166,9 @@
 		EDDA39F422D81C890073AC2E /* ViewModels */ = {
 			isa = PBXGroup;
 			children = (
-				ED8C046822DA867A0009AA2C /* RegistrationViewModel.swift */,
 				EDDA39F522D81C9D0073AC2E /* CardViewModel.swift */,
+				ED8C046822DA867A0009AA2C /* RegistrationViewModel.swift */,
+				ED8C047722DCF6BC0009AA2C /* LoginViewModel.swift */,
 				ED8C046C22DAA3580009AA2C /* Bindable.swift */,
 			);
 			path = ViewModels;
@@ -305,9 +311,11 @@
 				ED8C046D22DAA3580009AA2C /* Bindable.swift in Sources */,
 				EDDA39ED22D7FA640073AC2E /* BottomView.swift in Sources */,
 				ED8C046922DA867A0009AA2C /* RegistrationViewModel.swift in Sources */,
+				ED8C047622DCF26A0009AA2C /* LoginController.swift in Sources */,
 				EDDA39D222D7EBF50073AC2E /* AppDelegate.swift in Sources */,
 				EDDA39DA22D7EBF50073AC2E /* Tinder_Copy.xcdatamodeld in Sources */,
 				ED8C047122DBD1440009AA2C /* SettingsCell.swift in Sources */,
+				ED8C047822DCF6BC0009AA2C /* LoginViewModel.swift in Sources */,
 				EDDA39F622D81C9D0073AC2E /* CardViewModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

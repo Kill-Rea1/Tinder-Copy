@@ -17,22 +17,50 @@ class HomeController: UIViewController {
     fileprivate let bottomView = BottomView()
     fileprivate var cardViewModels = [CardViewModel]()
     fileprivate var lastFetchedUser: User?
+    fileprivate let hud = JGProgressHUD(style: .dark)
+    fileprivate var currentUser: User?
     
     override func viewDidLoad() {
         super.viewDidLoad()
         setupStackView()
         headerView.settingsButton.addTarget(self, action: #selector(handleSettings), for: .touchUpInside)
         bottomView.refreshButton.addTarget(self, action: #selector(handleRefresh), for: .touchUpInside)
-        fetchDataFromFirestore()
+        fetchCurrentUser()
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        if Auth.auth().currentUser == nil {
+            let loginController = LoginController()
+            loginController.delegate = self
+            let navController = UINavigationController(rootViewController: loginController)
+            present(navController, animated: true)
+        }
+    }
+    
+    fileprivate func fetchCurrentUser() {
+        hud.textLabel.text = "Loading..."
+        hud.show(in: view)
+        cardsDeckView.subviews.forEach({$0.removeFromSuperview()})
+        Firestore.firestore().fetchCurrentUser { (user, error) in
+            if let error = error {
+                self.hud.dismiss()
+                print(error)
+                return
+            }
+            self.currentUser = user
+            self.fetchDataFromFirestore()
+        }
     }
     
     fileprivate func fetchDataFromFirestore() {
-        let hud = JGProgressHUD(style: .dark)
-        hud.textLabel.text = "Fetching users"
-        hud.show(in: view)
-        let query = Firestore.firestore().collection("users").order(by: "uid").start(after: [lastFetchedUser?.uid ?? ""]).limit(to: 2)
+        let query = Firestore.firestore().collection("users")
+//            .order(by: "uid")
+//            .start(after: [lastFetchedUser?.uid ?? ""]).limit(to: 2)
+            .whereField("age", isGreaterThanOrEqualTo: currentUser?.minSeekingAge ?? 18)
+            .whereField("age", isLessThanOrEqualTo: currentUser?.maxSeekingAge ?? 100)
         query.getDocuments { (snapshot, error) in
-            hud.dismiss()
+            self.hud.dismiss()
             if let error = error {
                 print("failed to fetch data:", error)
                 return
@@ -61,6 +89,7 @@ class HomeController: UIViewController {
     
     @objc fileprivate func handleSettings() {
         let settingsController = SettingsController()
+        settingsController.delegate = self
         let navController = UINavigationController(rootViewController: settingsController)
         present(navController, animated: true)
     }
@@ -85,3 +114,12 @@ class HomeController: UIViewController {
     }
 }
 
+extension HomeController: SettingsControllerDelegate, LoginControllerDelegate {
+    func didFinishLoggingIn() {
+        fetchCurrentUser()
+    }
+    
+    func didSaveSettings() {
+        fetchCurrentUser()
+    }
+}

@@ -11,6 +11,10 @@ import Firebase
 import SDWebImage
 import JGProgressHUD
 
+protocol SettingsControllerDelegate {
+    func didSaveSettings()
+}
+
 class CustomImagePickerController: UIImagePickerController {
     var imageButton: UIButton?
 }
@@ -54,6 +58,7 @@ extension SettingsController: UIImagePickerControllerDelegate, UINavigationContr
 }
 
 class SettingsController: UITableViewController {
+    var delegate: SettingsControllerDelegate?
     fileprivate let padding: CGFloat = 16
     fileprivate var user: User?
     lazy var image1Button = createButton(selector: #selector(handleSelectPhoto))
@@ -83,19 +88,17 @@ class SettingsController: UITableViewController {
     }
     
     fileprivate func fetchCurrentUser() {
-        guard let uid = Auth.auth().currentUser?.uid else { return }
-        Firestore.firestore().collection("users").document(uid).getDocument { (documentSnapshot, error) in
+        Firestore.firestore().fetchCurrentUser { (user, error) in
             if let error = error {
                 print(error)
                 return
             }
-            
-            guard let dictionary = documentSnapshot?.data() else { return }
-            self.user = User(dictionary: dictionary)
+            self.user = user
             self.loadUserPhotos()
             self.tableView.reloadData()
         }
     }
+    
     @discardableResult
     fileprivate func loadImageIntoButton(_ url: URL, _ button: UIButton) -> SDWebImageCombinedOperation? {
         return SDWebImageManager.shared.loadImage(with: url, options: .continueInBackground, progress: nil) { (image, _, _, _, _, _) in
@@ -188,25 +191,24 @@ class SettingsController: UITableViewController {
     }
     
     @objc fileprivate func handleMinAgeChange(slider: UISlider) {
-        let indexPath = IndexPath(row: 0, section: 5)
-        guard let ageRangeCell = tableView.cellForRow(at: indexPath) as? AgeRangeCell else { return }
-        ageRangeCell.minLabel.text = "Min: \(Int(slider.value))"
-        if slider.value >= ageRangeCell.maxSlider.value {
-            ageRangeCell.maxSlider.value = slider.value
-            handleMaxAgeChange(slider: slider)
-        }
-        user?.minSeekingAge = Int(slider.value)
+        evaluateMinMax()
     }
     
     @objc fileprivate func handleMaxAgeChange(slider: UISlider) {
-        let indexPath = IndexPath(row: 0, section: 5)
-        guard let ageRangeCell = tableView.cellForRow(at: indexPath) as? AgeRangeCell else { return }
-        if slider.value < ageRangeCell.minSlider.value {
-            slider.value = ageRangeCell.minSlider.value
-            return
-        }
-        ageRangeCell.maxLabel.text = "Min: \(Int(slider.value))"
-        user?.maxSeekingAge = Int(slider.value)
+        evaluateMinMax()
+    }
+    
+    fileprivate func evaluateMinMax() {
+        guard let ageRangeCell = tableView.cellForRow(at: [5, 0]) as? AgeRangeCell else { return }
+        let minValue = Int(ageRangeCell.minSlider.value)
+        var maxValue = Int(ageRangeCell.maxSlider.value)
+        maxValue = max(minValue, maxValue)
+        ageRangeCell.maxSlider.value = Float(maxValue)
+        ageRangeCell.minLabel.text = "Min \(minValue)"
+        ageRangeCell.maxLabel.text = "Max \(maxValue)"
+        
+        user?.minSeekingAge = minValue
+        user?.maxSeekingAge = maxValue
     }
     
     @objc fileprivate func handleNameChange(textField: UITextField) {
@@ -225,8 +227,17 @@ class SettingsController: UITableViewController {
         navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Cancel", style: .plain, target: self, action: #selector(handleCancel))
         navigationItem.rightBarButtonItems = [
             UIBarButtonItem(title: "Save", style: .plain, target: self, action: #selector(handleSave)),
-            UIBarButtonItem(title: "Logout", style: .plain, target: self, action: #selector(handleCancel))
+            UIBarButtonItem(title: "Logout", style: .plain, target: self, action: #selector(handleLogout))
         ]
+    }
+    
+    @objc fileprivate func handleLogout() {
+        do {
+            try Auth.auth().signOut()
+        } catch {
+            print(error)
+        }
+        dismiss(animated: true)
     }
     
     @objc fileprivate func handleSave() {
@@ -251,6 +262,9 @@ class SettingsController: UITableViewController {
                 print(error)
                 return
             }
+            self.dismiss(animated: true, completion: {
+                self.delegate?.didSaveSettings()
+            })
         }
     }
     
