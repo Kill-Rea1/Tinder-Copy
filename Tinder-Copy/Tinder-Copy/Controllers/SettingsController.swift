@@ -134,8 +134,10 @@ class SettingsController: UITableViewController {
             headerLabel.text = "Profession"
         case 3:
             headerLabel.text = "Age"
-        default:
+        case 4:
             headerLabel.text = "Bio"
+        default:
+            headerLabel.text = "Seeking Age Range"
         }
         return headerLabel
     }
@@ -145,7 +147,7 @@ class SettingsController: UITableViewController {
     }
     
     override func numberOfSections(in tableView: UITableView) -> Int {
-        return 5
+        return 6
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -153,6 +155,16 @@ class SettingsController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        if indexPath.section == 5 {
+            let cell = AgeRangeCell(style: .default, reuseIdentifier: nil)
+            cell.minLabel.text = "Min: \(user?.minSeekingAge ?? 18)"
+            cell.maxLabel.text = "Max: \(user?.maxSeekingAge ?? 100)"
+            cell.minSlider.value = Float(user?.minSeekingAge ?? 18)
+            cell.maxSlider.value = Float(user?.maxSeekingAge ?? 100)
+            cell.minSlider.addTarget(self, action: #selector(handleMinAgeChange), for: .valueChanged)
+            cell.maxSlider.addTarget(self, action: #selector(handleMaxAgeChange), for: .valueChanged)
+            return cell
+        }
         let cell = SettingsCell(style: .default, reuseIdentifier: nil)
         switch indexPath.section {
         case 1:
@@ -173,6 +185,28 @@ class SettingsController: UITableViewController {
             cell.textField.placeholder = "Enter Bio"
         }
         return cell
+    }
+    
+    @objc fileprivate func handleMinAgeChange(slider: UISlider) {
+        let indexPath = IndexPath(row: 0, section: 5)
+        guard let ageRangeCell = tableView.cellForRow(at: indexPath) as? AgeRangeCell else { return }
+        ageRangeCell.minLabel.text = "Min: \(Int(slider.value))"
+        if slider.value >= ageRangeCell.maxSlider.value {
+            ageRangeCell.maxSlider.value = slider.value
+            handleMaxAgeChange(slider: slider)
+        }
+        user?.minSeekingAge = Int(slider.value)
+    }
+    
+    @objc fileprivate func handleMaxAgeChange(slider: UISlider) {
+        let indexPath = IndexPath(row: 0, section: 5)
+        guard let ageRangeCell = tableView.cellForRow(at: indexPath) as? AgeRangeCell else { return }
+        if slider.value < ageRangeCell.minSlider.value {
+            slider.value = ageRangeCell.minSlider.value
+            return
+        }
+        ageRangeCell.maxLabel.text = "Min: \(Int(slider.value))"
+        user?.maxSeekingAge = Int(slider.value)
     }
     
     @objc fileprivate func handleNameChange(textField: UITextField) {
@@ -204,7 +238,9 @@ class SettingsController: UITableViewController {
             "age": user?.age ?? -1,
             "imageUrl1": user?.imageUrl1 ?? "",
             "imageUrl2": user?.imageUrl2 ?? "",
-            "imageUrl3": user?.imageUrl3 ?? ""
+            "imageUrl3": user?.imageUrl3 ?? "",
+            "minSeekingAge": user?.minSeekingAge ?? 18,
+            "maxSeekingAge": user?.maxSeekingAge ?? 100
         ]
         let hud = JGProgressHUD(style: .dark)
         hud.textLabel.text = "Saving Profiel"

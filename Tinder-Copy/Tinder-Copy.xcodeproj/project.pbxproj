@@ -16,6 +16,7 @@
 		ED8C046D22DAA3580009AA2C /* Bindable.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED8C046C22DAA3580009AA2C /* Bindable.swift */; };
 		ED8C046F22DBB88E0009AA2C /* SettingsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED8C046E22DBB88E0009AA2C /* SettingsController.swift */; };
 		ED8C047122DBD1440009AA2C /* SettingsCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED8C047022DBD1440009AA2C /* SettingsCell.swift */; };
+		ED8C047322DCD26B0009AA2C /* AgeRangeCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED8C047222DCD26B0009AA2C /* AgeRangeCell.swift */; };
 		EDDA39D222D7EBF50073AC2E /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDDA39D122D7EBF50073AC2E /* AppDelegate.swift */; };
 		EDDA39D422D7EBF50073AC2E /* HomeController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDDA39D322D7EBF50073AC2E /* HomeController.swift */; };
 		EDDA39D722D7EBF50073AC2E /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = EDDA39D522D7EBF50073AC2E /* Main.storyboard */; };
@@ -42,6 +43,7 @@
 		ED8C046C22DAA3580009AA2C /* Bindable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Bindable.swift; sourceTree = "<group>"; };
 		ED8C046E22DBB88E0009AA2C /* SettingsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsController.swift; sourceTree = "<group>"; };
 		ED8C047022DBD1440009AA2C /* SettingsCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsCell.swift; sourceTree = "<group>"; };
+		ED8C047222DCD26B0009AA2C /* AgeRangeCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AgeRangeCell.swift; sourceTree = "<group>"; };
 		EDDA39CE22D7EBF50073AC2E /* Tinder-Copy.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Tinder-Copy.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		EDDA39D122D7EBF50073AC2E /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		EDDA39D322D7EBF50073AC2E /* HomeController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeController.swift; sourceTree = "<group>"; };
@@ -132,6 +134,7 @@
 				EDDA39EF22D803980073AC2E /* CardView.swift */,
 				ED8C046622DA5AAD0009AA2C /* CustomTexttField.swift */,
 				ED8C047022DBD1440009AA2C /* SettingsCell.swift */,
+				ED8C047222DCD26B0009AA2C /* AgeRangeCell.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -294,6 +297,7 @@
 				EDDA39F022D803980073AC2E /* CardView.swift in Sources */,
 				EDDA39EB22D7F7D80073AC2E /* HeaderView.swift in Sources */,
 				EDDA39D422D7EBF50073AC2E /* HomeController.swift in Sources */,
+				ED8C047322DCD26B0009AA2C /* AgeRangeCell.swift in Sources */,
 				EDDA39E822D7EC4E0073AC2E /* Helpers+Extensions.swift in Sources */,
 				ED8C046F22DBB88E0009AA2C /* SettingsController.swift in Sources */,
 				EDDA39F322D8124C0073AC2E /* User.swift in Sources */,
