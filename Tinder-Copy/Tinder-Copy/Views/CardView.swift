@@ -9,6 +9,10 @@
 import UIKit
 import SDWebImage
 
+protocol CardViewDelegate {
+    func didTapMoreInfo()
+}
+
 class CardView: UIView {
     public var cardViewModel: CardViewModel! {
         didSet {
@@ -33,6 +37,15 @@ class CardView: UIView {
     fileprivate let gradientLayer = CAGradientLayer()
     fileprivate let informationLabel = UILabel(text: "Information", font: .systemFont(ofSize: 30, weight: .heavy), numberOfLines: 2, textColor: .white)
     fileprivate let threshold: CGFloat = 100
+    fileprivate let moreInfoButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.constraintWidth(constant: 44)
+        button.constraintHeight(constant: 44)
+        button.setImage(#imageLiteral(resourceName: "33").withRenderingMode(.alwaysOriginal), for: .normal)
+        button.addTarget(self, action: #selector(handleMoreInfo), for: .touchUpInside)
+        return button
+    }()
+    public var delegate: CardViewDelegate?
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -40,6 +53,16 @@ class CardView: UIView {
         let panGesture = UIPanGestureRecognizer(target: self, action: #selector(handlePan))
         addGestureRecognizer(panGesture)
         addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleTap)))
+    }
+    
+    @objc fileprivate func handleMoreInfo() {
+//        // hack solution
+//        let rootViewController = UIApplication.shared.keyWindow?.rootViewController
+//        let userDetailsController = UIViewController()
+//        userDetailsController.view.backgroundColor = .yellow
+//        rootViewController?.present(userDetailsController, animated: true)
+        // delegate solution, more elegant
+        delegate?.didTapMoreInfo()
     }
     
     fileprivate func setupIndexImageObserver() {
@@ -61,8 +84,12 @@ class CardView: UIView {
         addSubview(imageView)
         setupGradientLayer()
         imageView.fillSuperview()
-        addSubview(informationLabel)
-        informationLabel.addConsctraints(leadingAnchor, trailingAnchor, nil, bottomAnchor, .init(top: 0, left: 16, bottom: 16, right: 16))
+        let stackView = UIStackView(arrangedSubviews: [
+            informationLabel, moreInfoButton
+            ], customSpacing: 16)
+        stackView.alignment = .center
+        addSubview(stackView)
+        stackView.addConsctraints(leadingAnchor, trailingAnchor, nil, bottomAnchor, .init(top: 0, left: 16, bottom: 16, right: 16))
         setupBarsStackView()
     }
     
@@ -111,11 +138,11 @@ class CardView: UIView {
     
     fileprivate func handleChanged(_ gesture: UIPanGestureRecognizer) {
         let translation = gesture.translation(in: self)
-//        let location = gesture.location(in: self)
+        let location = gesture.location(in: self)
         let degrees: CGFloat = translation.x / 20
         let angle = degrees * .pi / 180
-//        let direction: CGFloat = location.y > frame.height / 2 ? -1 : 1
-        transform = CGAffineTransform(rotationAngle: angle).translatedBy(x: translation.x, y: translation.y)
+        let direction: CGFloat = location.y > frame.height / 2 ? -1 : 1
+        transform = CGAffineTransform(rotationAngle: angle * direction).translatedBy(x: translation.x, y: translation.y)
     }
     
     fileprivate func handleEnded(_ gesture: UIPanGestureRecognizer) {
