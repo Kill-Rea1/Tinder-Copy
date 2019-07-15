@@ -20,6 +20,7 @@
 		ED8C047622DCF26A0009AA2C /* LoginController.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED8C047522DCF26A0009AA2C /* LoginController.swift */; };
 		ED8C047822DCF6BC0009AA2C /* LoginViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED8C047722DCF6BC0009AA2C /* LoginViewModel.swift */; };
 		ED8C047A22DD21950009AA2C /* UserDetailController.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED8C047922DD21950009AA2C /* UserDetailController.swift */; };
+		ED8C047D22DD35A80009AA2C /* SwipingPhotosController.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED8C047C22DD35A80009AA2C /* SwipingPhotosController.swift */; };
 		EDDA39D222D7EBF50073AC2E /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDDA39D122D7EBF50073AC2E /* AppDelegate.swift */; };
 		EDDA39D422D7EBF50073AC2E /* HomeController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDDA39D322D7EBF50073AC2E /* HomeController.swift */; };
 		EDDA39D722D7EBF50073AC2E /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = EDDA39D522D7EBF50073AC2E /* Main.storyboard */; };
@@ -50,6 +51,7 @@
 		ED8C047522DCF26A0009AA2C /* LoginController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginController.swift; sourceTree = "<group>"; };
 		ED8C047722DCF6BC0009AA2C /* LoginViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewModel.swift; sourceTree = "<group>"; };
 		ED8C047922DD21950009AA2C /* UserDetailController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDetailController.swift; sourceTree = "<group>"; };
+		ED8C047C22DD35A80009AA2C /* SwipingPhotosController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwipingPhotosController.swift; sourceTree = "<group>"; };
 		EDDA39CE22D7EBF50073AC2E /* Tinder-Copy.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Tinder-Copy.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		EDDA39D122D7EBF50073AC2E /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		EDDA39D322D7EBF50073AC2E /* HomeController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeController.swift; sourceTree = "<group>"; };
@@ -85,6 +87,15 @@
 				81A8FAEB84BE8603EE2F8221 /* Pods-Tinder-Copy.release.xcconfig */,
 			);
 			path = Pods;
+			sourceTree = "<group>";
+		};
+		ED8C047B22DD355C0009AA2C /* User Detail */ = {
+			isa = PBXGroup;
+			children = (
+				ED8C047922DD21950009AA2C /* UserDetailController.swift */,
+				ED8C047C22DD35A80009AA2C /* SwipingPhotosController.swift */,
+			);
+			path = "User Detail";
 			sourceTree = "<group>";
 		};
 		EDDA39C522D7EBF50073AC2E = {
@@ -148,8 +159,8 @@
 		EDDA39EE22D800E10073AC2E /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				ED8C047B22DD355C0009AA2C /* User Detail */,
 				EDDA39D322D7EBF50073AC2E /* HomeController.swift */,
-				ED8C047922DD21950009AA2C /* UserDetailController.swift */,
 				ED8C046E22DBB88E0009AA2C /* SettingsController.swift */,
 				ED8C046422DA557B0009AA2C /* RegistrationController.swift */,
 				ED8C047522DCF26A0009AA2C /* LoginController.swift */,
@@ -321,6 +332,7 @@
 				ED8C047122DBD1440009AA2C /* SettingsCell.swift in Sources */,
 				ED8C047822DCF6BC0009AA2C /* LoginViewModel.swift in Sources */,
 				EDDA39F622D81C9D0073AC2E /* CardViewModel.swift in Sources */,
+				ED8C047D22DD35A80009AA2C /* SwipingPhotosController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
