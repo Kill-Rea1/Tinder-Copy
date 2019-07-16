@@ -18,7 +18,7 @@ class SwipingPhotosController: UIPageViewController, UIPageViewControllerDataSou
     public var cardViewModel: CardViewModel! {
         didSet {
             if cardViewModel.imageUrls.count != 0 {
-            controllers = cardViewModel.imageUrls.map({ (imageUrl) -> PhotoController in
+                controllers = cardViewModel.imageUrls.map({ (imageUrl) -> PhotoController in
                 let photoController = PhotoController(imageUrl: imageUrl)
                 return photoController
             })
@@ -73,7 +73,7 @@ class SwipingPhotosController: UIPageViewController, UIPageViewControllerDataSou
     }
     
     fileprivate func setupBarViews() {
-        cardViewModel.imageUrls.forEach { (_) in
+        controllers.forEach { (_) in
             let barView = UIView()
             barView.backgroundColor = barDeselectedColor
             barView.layer.cornerRadius = 2

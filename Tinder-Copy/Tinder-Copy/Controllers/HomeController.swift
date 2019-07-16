@@ -16,15 +16,16 @@ class HomeController: UIViewController {
     fileprivate let cardsDeckView = UIView()
     fileprivate let bottomView = BottomView()
     fileprivate var cardViewModels = [CardViewModel]()
-    fileprivate var lastFetchedUser: User?
     fileprivate let hud = JGProgressHUD(style: .dark)
     fileprivate var currentUser: User?
+    fileprivate var topCardView: CardView?
     
     override func viewDidLoad() {
         super.viewDidLoad()
         setupStackView()
         headerView.settingsButton.addTarget(self, action: #selector(handleSettings), for: .touchUpInside)
         bottomView.refreshButton.addTarget(self, action: #selector(handleRefresh), for: .touchUpInside)
+        bottomView.likeButton.addTarget(self, action: #selector(handleLike), for: .touchUpInside)
         fetchCurrentUser()
     }
     
@@ -67,23 +68,31 @@ class HomeController: UIViewController {
                 print("failed to fetch data:", error)
                 return
             }
+            // Linked List
+            var previousCardView: CardView?
             snapshot?.documents.forEach({ (documentSnapshot) in
                 let userDictionary = documentSnapshot.data()
                 let user = User(dictionary: userDictionary)
                 if user.uid != Auth.auth().currentUser?.uid {
-                    self.setupCardFromUser(user: user)
+                    let cardView = self.setupCardFromUser(user: user)
+                    previousCardView?.nextCardView = cardView
+                    previousCardView = cardView
+                    if self.topCardView == nil {
+                        self.topCardView = cardView
+                    }
                 }
             })
         }
     }
     
-    fileprivate func setupCardFromUser(user: User) {
+    fileprivate func setupCardFromUser(user: User) -> CardView {
         let cardView = CardView()
         cardView.delegate = self
         cardView.cardViewModel = user.toCardViewModel()
         cardsDeckView.addSubview(cardView)
         cardsDeckView.sendSubviewToBack(cardView)
         cardView.fillSuperview()
+        return cardView
     }
     
     @objc fileprivate func handleRefresh() {
@@ -95,6 +104,17 @@ class HomeController: UIViewController {
         settingsController.delegate = self
         let navController = UINavigationController(rootViewController: settingsController)
         present(navController, animated: true)
+    }
+    
+    @objc fileprivate func handleLike() {
+        UIView.animate(withDuration: 1, delay: 0, usingSpringWithDamping: 0.6, initialSpringVelocity: 0.1, options: .curveEaseOut, animations: {
+            self.topCardView?.frame = CGRect(x: 600, y: 0, width: (self.topCardView?.frame.width)!, height: (self.topCardView?.frame.height)!)
+            let angle = 30 * CGFloat.pi / 180
+            self.topCardView?.transform = CGAffineTransform(rotationAngle: angle)
+        }) { (_) in
+            self.topCardView?.removeFromSuperview()
+            self.topCardView = self.topCardView?.nextCardView
+        }
     }
     
     fileprivate func setupStackView() {
@@ -109,6 +129,11 @@ class HomeController: UIViewController {
 }
 
 extension HomeController: SettingsControllerDelegate, LoginControllerDelegate, CardViewDelegate {
+    func didRemoveCardView(cardView: CardView) {
+        topCardView?.removeFromSuperview()
+        topCardView = topCardView?.nextCardView
+    }
+    
     func didTapMoreInfo(cardViewModel: CardViewModel) {
         let userDetailController = UserDetailController()
         userDetailController.cardViewModel = cardViewModel

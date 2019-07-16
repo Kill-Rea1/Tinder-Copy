@@ -63,6 +63,11 @@ class LoginController: UIViewController {
     fileprivate let gradientLayer = CAGradientLayer()
     public var delegate: LoginControllerDelegate?
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        setupNotificationsObservers()
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -70,7 +75,11 @@ class LoginController: UIViewController {
         setupLayout()
         setupLoginViewModelObserver()
         setupTapGesture()
-        setupNotificationsObservers()
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        NotificationCenter.default.removeObserver(self)
     }
     
     fileprivate func setupNotificationsObservers() {

@@ -108,19 +108,23 @@ class RegistrationController: UIViewController {
     
     // MARK:- View methods
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        setupNotificationsObservers()
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
         setupGradientLayer()
         setupLayout()
-        setupNotificationsObservers()
         setupTagGesture()
         setupRegistrationViewModelObserver()
     }
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-//        NotificationCenter.default.removeObserver(self)
+        NotificationCenter.default.removeObserver(self)
     }
     
     override func viewWillLayoutSubviews() {

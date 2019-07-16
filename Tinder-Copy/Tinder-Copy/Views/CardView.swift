@@ -11,6 +11,7 @@ import SDWebImage
 
 protocol CardViewDelegate {
     func didTapMoreInfo(cardViewModel: CardViewModel)
+    func didRemoveCardView(cardView: CardView)
 }
 
 class CardView: UIView {
@@ -21,6 +22,7 @@ class CardView: UIView {
             informationLabel.textAlignment = cardViewModel.textAligment
         }
     }
+    public var nextCardView: CardView?
     fileprivate let barDeselectedColor = UIColor(white: 0, alpha: 0.1)
     fileprivate let swipingPhotosController = SwipingPhotosController(isCardViewMode: true)
     fileprivate let gradientLayer = CAGradientLayer()
@@ -111,10 +113,11 @@ class CardView: UIView {
                 self.transform = .identity
             }
         }, completion: { (_) in
+            self.transform = .identity
             if isShouldDismiss {
                 self.removeFromSuperview()
+                self.delegate?.didRemoveCardView(cardView: self)
             }
-            self.transform = .identity
         })
     }
     
