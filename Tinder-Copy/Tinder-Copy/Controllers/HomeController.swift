@@ -94,7 +94,8 @@ class HomeController: UIViewController {
                 let userDictionary = documentSnapshot.data()
                 let user = User(dictionary: userDictionary)
                 let isNotCurrentUser = user.uid != Auth.auth().currentUser?.uid
-                let hasNotSwipedBefore = self.swipes[user.uid!] == nil
+//                let hasNotSwipedBefore = self.swipes[user.uid!] == nil
+                let hasNotSwipedBefore = true
                 if isNotCurrentUser && hasNotSwipedBefore {
                     let cardView = self.setupCardFromUser(user: user)
                     previousCardView?.nextCardView = cardView
@@ -118,6 +119,7 @@ class HomeController: UIViewController {
     }
     
     @objc fileprivate func handleRefresh() {
+        cardsDeckView.subviews.forEach({$0.removeFromSuperview()})
         fetchSwipes()
     }
     
@@ -126,6 +128,12 @@ class HomeController: UIViewController {
         settingsController.delegate = self
         let navController = UINavigationController(rootViewController: settingsController)
         present(navController, animated: true)
+    }
+    
+    fileprivate func presentMatchView(cardUID: String) {
+        let matchView = MatchView()
+        view.addSubview(matchView)
+        matchView.fillSuperview()
     }
     
     fileprivate func checkIfMatchExist(cardUID: String) {
@@ -138,7 +146,7 @@ class HomeController: UIViewController {
             guard let uid = Auth.auth().currentUser?.uid else { return }
             let hasMatch = data[uid] as? Int == 1
             if hasMatch {
-                print("Match founded")
+                self.presentMatchView(cardUID: cardUID)
             }
         }
     }
@@ -158,7 +166,9 @@ class HomeController: UIViewController {
                         print(error)
                         return
                     }
-                    self.checkIfMatchExist(cardUID: cardUID)
+                    if didLike == 1 {
+                        self.checkIfMatchExist(cardUID: cardUID)
+                    }
                 }
             } else {
                 Firestore.firestore().collection("swipes").document(uid).setData(documentData) { (error) in
@@ -166,7 +176,9 @@ class HomeController: UIViewController {
                         print(error)
                         return
                     }
-                    self.checkIfMatchExist(cardUID: cardUID)
+                    if didLike == 1 {
+                        self.checkIfMatchExist(cardUID: cardUID)
+                    }
                 }
             }
         }
