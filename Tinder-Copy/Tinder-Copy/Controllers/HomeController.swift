@@ -19,6 +19,7 @@ class HomeController: UIViewController {
     fileprivate let hud = JGProgressHUD(style: .dark)
     fileprivate var currentUser: User?
     fileprivate var topCardView: CardView?
+    fileprivate var swipes = [String: Int]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -51,6 +52,23 @@ class HomeController: UIViewController {
                 return
             }
             self.currentUser = user
+            self.fetchSwipes()
+        }
+    }
+    
+    fileprivate func fetchSwipes() {
+//        swipes = [:]
+        guard let uid = Auth.auth().currentUser?.uid else { return }
+        Firestore.firestore().collection("swipes").document(uid).getDocument { (snapshot, error) in
+            if let error = error {
+                print(error)
+                return
+            }
+            guard let data = snapshot?.data() as? [String: Int] else {
+                self.fetchDataFromFirestore()
+                return
+            }
+            self.swipes = data
             self.fetchDataFromFirestore()
         }
     }
@@ -75,7 +93,9 @@ class HomeController: UIViewController {
             snapshot?.documents.forEach({ (documentSnapshot) in
                 let userDictionary = documentSnapshot.data()
                 let user = User(dictionary: userDictionary)
-                if user.uid != Auth.auth().currentUser?.uid {
+                let isNotCurrentUser = user.uid != Auth.auth().currentUser?.uid
+                let hasNotSwipedBefore = self.swipes[user.uid!] == nil
+                if isNotCurrentUser && hasNotSwipedBefore {
                     let cardView = self.setupCardFromUser(user: user)
                     previousCardView?.nextCardView = cardView
                     previousCardView = cardView
@@ -98,7 +118,7 @@ class HomeController: UIViewController {
     }
     
     @objc fileprivate func handleRefresh() {
-        fetchDataFromFirestore()
+        fetchSwipes()
     }
     
     @objc fileprivate func handleSettings() {
@@ -106,6 +126,21 @@ class HomeController: UIViewController {
         settingsController.delegate = self
         let navController = UINavigationController(rootViewController: settingsController)
         present(navController, animated: true)
+    }
+    
+    fileprivate func checkIfMatchExist(cardUID: String) {
+        Firestore.firestore().collection("swipes").document(cardUID).getDocument { (snapshot, error) in
+            if let error = error {
+                print(error)
+                return
+            }
+            guard let data = snapshot?.data() else { return }
+            guard let uid = Auth.auth().currentUser?.uid else { return }
+            let hasMatch = data[uid] as? Int == 1
+            if hasMatch {
+                print("Match founded")
+            }
+        }
     }
     
     fileprivate func saveSwipeToFirestore(didLike: Int) {
@@ -123,6 +158,7 @@ class HomeController: UIViewController {
                         print(error)
                         return
                     }
+                    self.checkIfMatchExist(cardUID: cardUID)
                 }
             } else {
                 Firestore.firestore().collection("swipes").document(uid).setData(documentData) { (error) in
@@ -130,18 +166,18 @@ class HomeController: UIViewController {
                         print(error)
                         return
                     }
-                    
+                    self.checkIfMatchExist(cardUID: cardUID)
                 }
             }
         }
     }
     
-    @objc func handleLike() {
+    @objc fileprivate func handleLike() {
         saveSwipeToFirestore(didLike: 1)
         performSwipeAnimation(duration: 0.5, translation: 700, angle: 20)
     }
     
-    @objc func handleDislike() {
+    @objc fileprivate func handleDislike() {
         saveSwipeToFirestore(didLike: 0)
         performSwipeAnimation(duration: 0.75, translation: -700, angle: -15)
     }
