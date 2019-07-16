@@ -12,6 +12,7 @@ import SDWebImage
 protocol CardViewDelegate {
     func didTapMoreInfo(cardViewModel: CardViewModel)
     func didRemoveCardView(cardView: CardView)
+    func didSwipedOut(didLike: Bool)
 }
 
 class CardView: UIView {
@@ -106,19 +107,23 @@ class CardView: UIView {
     fileprivate func handleEnded(_ gesture: UIPanGestureRecognizer) {
         let isShouldDismiss = abs(gesture.translation(in: self).x) > threshold
         let direction: CGFloat = gesture.translation(in: self).x > 0 ? 1 : -1
-        UIView.animate(withDuration: 0.75, delay: 0, usingSpringWithDamping: 0.6, initialSpringVelocity: 0.1, options: .curveEaseOut, animations: {
-            if isShouldDismiss {
-                self.frame = CGRect(x: 600 * direction, y: 0, width: self.frame.width, height: self.frame.height)
-            } else {
+        if isShouldDismiss {
+            delegate?.didSwipedOut(didLike: direction == 1)
+        } else {
+            UIView.animate(withDuration: 0.75, delay: 0, usingSpringWithDamping: 0.6, initialSpringVelocity: 0.1, options: .curveEaseOut, animations: {
                 self.transform = .identity
-            }
-        }, completion: { (_) in
-            self.transform = .identity
-            if isShouldDismiss {
-                self.removeFromSuperview()
-                self.delegate?.didRemoveCardView(cardView: self)
-            }
-        })
+            })
+        }
+        // hack solution
+//        if isShouldDismiss {
+//            guard let homeController = delegate as? HomeController else { return }
+//            homeController.handleLike()
+//            homeController.handleDislike()
+//        } else {
+//            UIView.animate(withDuration: 0.75, delay: 0, usingSpringWithDamping: 0.6, initialSpringVelocity: 0.1, options: .curveEaseOut, animations: {
+//                self.transform = .identity
+//            })
+//        }
     }
     
     required init?(coder aDecoder: NSCoder) {

@@ -108,11 +108,41 @@ class HomeController: UIViewController {
         present(navController, animated: true)
     }
     
-    @objc fileprivate func handleLike() {
+    fileprivate func saveSwipeToFirestore(didLike: Int) {
+        guard let uid = Auth.auth().currentUser?.uid else { return }
+        guard let cardUID = topCardView?.cardViewModel.uid else { return }
+        let documentData = [cardUID: didLike]
+        Firestore.firestore().collection("swipes").document(uid).getDocument { (snapshot, error) in
+            if let error = error {
+                print(error)
+                return
+            }
+            if snapshot?.exists == true {
+                Firestore.firestore().collection("swipes").document(uid).updateData(documentData) { (error) in
+                    if let error = error {
+                        print(error)
+                        return
+                    }
+                }
+            } else {
+                Firestore.firestore().collection("swipes").document(uid).setData(documentData) { (error) in
+                    if let error = error {
+                        print(error)
+                        return
+                    }
+                    
+                }
+            }
+        }
+    }
+    
+    @objc func handleLike() {
+        saveSwipeToFirestore(didLike: 1)
         performSwipeAnimation(duration: 0.5, translation: 700, angle: 20)
     }
     
-    @objc fileprivate func handleDislike() {
+    @objc func handleDislike() {
+        saveSwipeToFirestore(didLike: 0)
         performSwipeAnimation(duration: 0.75, translation: -700, angle: -15)
     }
     
@@ -148,6 +178,14 @@ class HomeController: UIViewController {
 }
 
 extension HomeController: SettingsControllerDelegate, LoginControllerDelegate, CardViewDelegate {
+    func didSwipedOut(didLike: Bool) {
+        if didLike {
+            handleLike()
+        } else {
+            handleDislike()
+        }
+    }
+    
     func didRemoveCardView(cardView: CardView) {
         topCardView?.removeFromSuperview()
         topCardView = topCardView?.nextCardView

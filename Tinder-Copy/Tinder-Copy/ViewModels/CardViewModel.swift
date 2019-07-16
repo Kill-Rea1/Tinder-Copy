@@ -16,11 +16,13 @@ class CardViewModel {
     let imageUrls: [String]
     let attributedText: NSAttributedString
     let textAligment: NSTextAlignment
+    let uid: String
     
-    init(photos: [String], attributedText: NSAttributedString, textAligment: NSTextAlignment) {
+    init(photos: [String], attributedText: NSAttributedString, textAligment: NSTextAlignment, uid: String) {
         self.imageUrls = photos
         self.attributedText = attributedText
         self.textAligment = textAligment
+        self.uid = uid
     }
     
     fileprivate var imageIndex = 0 {
