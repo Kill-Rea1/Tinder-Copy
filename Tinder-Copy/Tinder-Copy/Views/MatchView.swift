@@ -10,23 +10,61 @@ import UIKit
 
 class MatchView: UIView {
     fileprivate let size: CGFloat = 140
+    fileprivate let padding: CGFloat = 32
     fileprivate let blurEffect = UIVisualEffectView(effect: UIBlurEffect(style: .dark))
-    fileprivate let currentUserImageView: UIImageView = {
+    fileprivate let itsAMatchImageView: UIImageView = {
+        let iv = UIImageView(image: #imageLiteral(resourceName: "itsamatch"))
+        iv.contentMode = .scaleAspectFill
+        return iv
+    }()
+    fileprivate let desciptionLabel: UILabel = {
+        let label = UILabel()
+        label.text = "You and X have liked\neach other"
+        label.textAlignment = .center
+        label.numberOfLines = 2
+        label.textColor = .white
+        label.font = UIFont.systemFont(ofSize: 18, weight: .bold)
+        return label
+    }()
+    fileprivate lazy var currentUserImageView: UIImageView = {
         let iv = UIImageView(image: #imageLiteral(resourceName: "kelly1"))
         iv.contentMode = .scaleAspectFill
         iv.clipsToBounds = true
+        iv.constraintWidth(constant: size)
+        iv.constraintHeight(constant: size)
+        iv.layer.cornerRadius = size / 2
         iv.layer.borderWidth = 2
         iv.layer.borderColor = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0).cgColor
         return iv
     }()
     
-    fileprivate let cardUserImageView: UIImageView = {
+    fileprivate lazy var cardUserImageView: UIImageView = {
         let iv = UIImageView(image: #imageLiteral(resourceName: "jane3"))
         iv.contentMode = .scaleAspectFill
         iv.clipsToBounds = true
+        iv.constraintWidth(constant: size)
+        iv.constraintHeight(constant: size)
+        iv.layer.cornerRadius = size / 2
         iv.layer.borderWidth = 2
         iv.layer.borderColor = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0).cgColor
         return iv
+    }()
+    
+    fileprivate lazy var sendMessageButton: SendMessageButton = {
+        let button = SendMessageButton(type: .system)
+        button.setTitle("SEND MESSAGE", for: .normal)
+        button.setTitleColor(.white, for: .normal)
+        button.constraintHeight(constant: 64)
+        return button
+    }()
+    
+    fileprivate lazy var keepSwipingButton: KeepSwipingButton = {
+        let button = KeepSwipingButton(type: .system)
+        button.setTitle("Keep Swiping", for: .normal)
+        button.setTitleColor(.white, for: .normal)
+        button.constraintHeight(constant: 64)
+        button.backgroundColor = .clear
+        return button
     }()
     
     override init(frame: CGRect) {
@@ -44,14 +82,16 @@ class MatchView: UIView {
     }
     
     fileprivate func setupLayout() {
-        addSubview(currentUserImageView)
-        addSubview(cardUserImageView)
-        cardUserImageView.layer.cornerRadius = size / 2
-        currentUserImageView.layer.cornerRadius = size / 2
-        currentUserImageView.addConsctraints(nil, centerXAnchor, nil, nil, .init(top: 0, left: 0, bottom: 0, right: 16), .init(width: size, height: size))
-        cardUserImageView.addConsctraints(centerXAnchor, nil, nil, nil, .init(top: 0, left: 16, bottom: 0, right: 0), .init(width: size, height: size))
-        cardUserImageView.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
-        currentUserImageView.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
+        let imageStackView = UIStackView(arrangedSubviews: [
+            currentUserImageView, cardUserImageView
+            ], customSpacing: padding)
+        imageStackView.distribution = .fillEqually
+        let verticalStackView = VerticalStackView(arrangedSubviews: [
+            itsAMatchImageView, desciptionLabel, imageStackView, sendMessageButton, keepSwipingButton
+            ], spacing: 16)
+        addSubview(verticalStackView)
+        let width = size * 2 + padding
+        verticalStackView.centerInSuperview(size: .init(width: width, height: 0))
     }
     
     @objc fileprivate func handleTap() {
