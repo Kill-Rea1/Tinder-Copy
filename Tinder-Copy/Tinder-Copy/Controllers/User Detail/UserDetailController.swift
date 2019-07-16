@@ -18,7 +18,7 @@ class UserDetailController: UIViewController {
         return sv
     }()
     fileprivate let extraHeight: CGFloat = 80
-    fileprivate let swipingPhotosController = SwipingPhotosController(transitionStyle: .scroll, navigationOrientation: .horizontal)
+    fileprivate let swipingPhotosController = SwipingPhotosController()
     fileprivate let infoLabel: UILabel = {
         let label = UILabel()
         label.text = "Name 30\nDoctor\nSome Bio"

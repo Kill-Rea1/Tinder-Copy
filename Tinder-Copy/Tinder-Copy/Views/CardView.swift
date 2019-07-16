@@ -16,24 +16,13 @@ protocol CardViewDelegate {
 class CardView: UIView {
     public var cardViewModel: CardViewModel! {
         didSet {
-            let imageName = cardViewModel.imageUrls.first ?? ""
-            if let url = URL(string: imageName) {
-                imageView.sd_setImage(with: url)
-            }
+            swipingPhotosController.cardViewModel = self.cardViewModel
             informationLabel.attributedText = cardViewModel.attributedText
             informationLabel.textAlignment = cardViewModel.textAligment
-            (0..<cardViewModel.imageUrls.count).forEach { (_) in
-                let barView = UIView()
-                barView.backgroundColor = barDeselectedColor
-                barsStackView.addArrangedSubview(barView)
-            }
-            barsStackView.arrangedSubviews.first?.backgroundColor = .white
-            setupIndexImageObserver()
         }
     }
     fileprivate let barDeselectedColor = UIColor(white: 0, alpha: 0.1)
-    fileprivate let barsStackView = UIStackView()
-    fileprivate let imageView = UIImageView(image: #imageLiteral(resourceName: "lady5c"))
+    fileprivate let swipingPhotosController = SwipingPhotosController(isCardViewMode: true)
     fileprivate let gradientLayer = CAGradientLayer()
     fileprivate let informationLabel = UILabel(text: "Information", font: .systemFont(ofSize: 30, weight: .heavy), numberOfLines: 2, textColor: .white)
     fileprivate let threshold: CGFloat = 100
@@ -52,7 +41,6 @@ class CardView: UIView {
         setupLayout()
         let panGesture = UIPanGestureRecognizer(target: self, action: #selector(handlePan))
         addGestureRecognizer(panGesture)
-        addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleTap)))
     }
     
     @objc fileprivate func handleMoreInfo() {
@@ -65,39 +53,19 @@ class CardView: UIView {
         delegate?.didTapMoreInfo(cardViewModel: self.cardViewModel)
     }
     
-    fileprivate func setupIndexImageObserver() {
-        cardViewModel.imageIndexObserver = { [weak self] (index, imageUrl) in
-            if let url = URL(string: imageUrl ?? "") {
-                self?.imageView.sd_setImage(with: url)
-            }
-            self?.barsStackView.arrangedSubviews.forEach({ (v) in
-                v.backgroundColor = self?.barDeselectedColor
-            })
-            self?.barsStackView.arrangedSubviews[index].backgroundColor = .white
-        }
-    }
-    
     fileprivate func setupLayout() {
         layer.cornerRadius = 10
         clipsToBounds = true
-        imageView.contentMode = .scaleAspectFill
-        addSubview(imageView)
+        let swipingPhotosView = swipingPhotosController.view!
+        addSubview(swipingPhotosView)
         setupGradientLayer()
-        imageView.fillSuperview()
+        swipingPhotosView.fillSuperview()
         let stackView = UIStackView(arrangedSubviews: [
             informationLabel, moreInfoButton
             ], customSpacing: 16)
         stackView.alignment = .center
         addSubview(stackView)
         stackView.addConsctraints(leadingAnchor, trailingAnchor, nil, bottomAnchor, .init(top: 0, left: 16, bottom: 16, right: 16))
-        setupBarsStackView()
-    }
-    
-    fileprivate func setupBarsStackView() {
-        barsStackView.distribution = .fillEqually
-        barsStackView.spacing = 4
-        addSubview(barsStackView)
-        barsStackView.addConsctraints(leadingAnchor, trailingAnchor, topAnchor, nil, .init(top: 8, left: 8, bottom: 0, right: 8), .init(width: 0, height: 4))
     }
     
     fileprivate func setupGradientLayer() {
@@ -109,16 +77,6 @@ class CardView: UIView {
     
     override func layoutSubviews() {
         gradientLayer.frame = self.frame
-    }
-    
-    @objc fileprivate func handleTap(gesture: UITapGestureRecognizer) {
-        let tapLocation = gesture.location(in: self)
-        let shouldAdvance = tapLocation.x > frame.width / 2 ? true : false
-        if shouldAdvance {
-            cardViewModel.advanceNextPhoto()
-        } else {
-            cardViewModel.goToPreviousPhoto()
-        }
     }
     
     @objc fileprivate func handlePan(gesture: UIPanGestureRecognizer) {

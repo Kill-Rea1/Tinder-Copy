@@ -15,6 +15,7 @@ extension RegistrationController: UIImagePickerControllerDelegate, UINavigationC
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
         let image = info[.originalImage] as? UIImage
         registrationViewModel.bindableImage.value = image
+        registrationViewModel.checkFormValidity()
         dismiss(animated: true)
     }
     
@@ -28,6 +29,7 @@ class RegistrationController: UIViewController {
     // MARK:- Properties
     lazy var selectPhotoButtonWidthAnchor = selectPhotoButton.widthAnchor.constraint(equalToConstant: 275)
     lazy var selectPhotoButtonHeightAnchor = selectPhotoButton.heightAnchor.constraint(equalToConstant: 275)
+    public var delegate: LoginControllerDelegate?
     
     fileprivate let selectPhotoButton: UIButton = {
         let button = UIButton(type: .system)
@@ -159,7 +161,9 @@ class RegistrationController: UIViewController {
                 self?.showHUDWithError(error: error)
                 return
             }
-            self?.dismiss(animated: true)
+            self?.dismiss(animated: true, completion: {
+                self?.delegate?.didFinishLoggingIn()
+            })
         }
     }
     

@@ -54,11 +54,13 @@ class HomeController: UIViewController {
     }
     
     fileprivate func fetchDataFromFirestore() {
+        let minAge = currentUser?.minSeekingAge ?? User.defaultMinSeekingAge
+        let maxAge = currentUser?.maxSeekingAge ?? User.defaultMaxSeekingAge
         let query = Firestore.firestore().collection("users")
 //            .order(by: "uid")
 //            .start(after: [lastFetchedUser?.uid ?? ""]).limit(to: 2)
-            .whereField("age", isGreaterThanOrEqualTo: currentUser?.minSeekingAge ?? 18)
-            .whereField("age", isLessThanOrEqualTo: currentUser?.maxSeekingAge ?? 100)
+            .whereField("age", isGreaterThanOrEqualTo: minAge)
+            .whereField("age", isLessThanOrEqualTo: maxAge)
         query.getDocuments { (snapshot, error) in
             self.hud.dismiss()
             if let error = error {

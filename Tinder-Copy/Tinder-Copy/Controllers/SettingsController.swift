@@ -250,8 +250,8 @@ class SettingsController: UITableViewController {
             "imageUrl1": user?.imageUrl1 ?? "",
             "imageUrl2": user?.imageUrl2 ?? "",
             "imageUrl3": user?.imageUrl3 ?? "",
-            "minSeekingAge": user?.minSeekingAge ?? 18,
-            "maxSeekingAge": user?.maxSeekingAge ?? 100
+            "minSeekingAge": user?.minSeekingAge ?? User.defaultMinSeekingAge,
+            "maxSeekingAge": user?.maxSeekingAge ?? User.defaultMaxSeekingAge
         ]
         let hud = JGProgressHUD(style: .dark)
         hud.textLabel.text = "Saving Profiel"

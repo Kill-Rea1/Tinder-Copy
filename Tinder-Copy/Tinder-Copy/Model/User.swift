@@ -9,6 +9,10 @@
 import UIKit
 
 struct User: ProducesCardViewModel{
+    
+    static let defaultMinSeekingAge = 18
+    static let defaultMaxSeekingAge = 50
+    
     var name: String?
     var age: Int?
     var profession: String?
