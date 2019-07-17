@@ -171,7 +171,7 @@ class LoginController: UIViewController {
         overralStackView.addConsctraints(view.leadingAnchor, view.trailingAnchor, nil, nil, .init(top: 0, left: 50, bottom: 0, right: 50))
         overralStackView.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
         view.addSubview(goToRegisterButton)
-        goToRegisterButton.addConsctraints(view.leadingAnchor, view.trailingAnchor, nil, view.safeAreaLayoutGuide.bottomAnchor)
+        goToRegisterButton.addConsctraints(view.leadingAnchor, view.trailingAnchor, nil, view.safeAreaLayoutGuide.bottomAnchor, .init(top: 0, left: 0, bottom: 16, right: 0))
     }
     
     fileprivate func setupGradientLayer() {

@@ -19,6 +19,7 @@ class HomeController: UIViewController {
     fileprivate var currentUser: User?
     fileprivate var topCardView: CardView?
     fileprivate var swipes = [String: Int]()
+    fileprivate var users = [String: User]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -94,6 +95,7 @@ class HomeController: UIViewController {
             snapshot?.documents.forEach({ (documentSnapshot) in
                 let userDictionary = documentSnapshot.data()
                 let user = User(dictionary: userDictionary)
+                self.users[user.uid ?? ""] = user
                 let isNotCurrentUser = user.uid != Auth.auth().currentUser?.uid
 //                let hasNotSwipedBefore = self.swipes[user.uid!] == nil
                 let hasNotSwipedBefore = true
@@ -155,6 +157,22 @@ class HomeController: UIViewController {
             let hasMatch = data[uid] as? Int == 1
             if hasMatch {
                 self.presentMatchView(cardUID: cardUID)
+                guard let cardUser = self.users[cardUID] else { return }
+                let data: [String: Any] = ["name": cardUser.name ?? "", "profileImageUrl": cardUser.imageUrl1 ?? "", "uid": cardUID, "timestamp": Timestamp(date: Date())]
+                Firestore.firestore().collection("matches_messages").document(uid).collection("matches").document(cardUID).setData(data, completion: { (error) in
+                    if let error = error {
+                        print("Failed to save match:", error)
+                        return
+                    }
+                })
+                guard let currentUser = self.currentUser else { return }
+                let dataToMatched: [String: Any] = ["name": currentUser.name ?? "", "profileImageUrl": currentUser.imageUrl1 ?? "", "uid": uid, "timestamp": Timestamp(date: Date())]
+                Firestore.firestore().collection("matches_messages").document(cardUID).collection("matches").document(uid).setData(dataToMatched, completion: { (error) in
+                    if let error = error {
+                        print("Failed to save match:", error)
+                        return
+                    }
+                })
             }
         }
     }

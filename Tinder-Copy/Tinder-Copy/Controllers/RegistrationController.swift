@@ -243,7 +243,7 @@ class RegistrationController: UIViewController {
         stackView.addConsctraints(view.leadingAnchor, view.trailingAnchor, nil, nil, .init(top: 0, left: 50, bottom: 0, right: 50))
         stackView.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
         view.addSubview(gotToLoginButton)
-        gotToLoginButton.addConsctraints(view.leadingAnchor, view.trailingAnchor, nil, view.safeAreaLayoutGuide.bottomAnchor)
+        gotToLoginButton.addConsctraints(view.leadingAnchor, view.trailingAnchor, nil, view.safeAreaLayoutGuide.bottomAnchor, .init(top: 0, left: 0, bottom: 16, right: 0))
     }
     
     fileprivate func setupGradientLayer() {
