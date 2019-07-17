@@ -19,8 +19,8 @@ class SwipingPhotosController: UIPageViewController, UIPageViewControllerDataSou
         didSet {
             if cardViewModel.imageUrls.count != 0 {
                 controllers = cardViewModel.imageUrls.map({ (imageUrl) -> PhotoController in
-                let photoController = PhotoController(imageUrl: imageUrl)
-                return photoController
+                    let photoController = PhotoController(imageUrl: imageUrl)
+                    return photoController
             })
             } else {
                 controllers = [PhotoController()]

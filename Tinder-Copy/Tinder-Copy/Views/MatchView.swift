@@ -35,6 +35,7 @@ class MatchView: UIView {
     }
     
     fileprivate let size: CGFloat = 140
+    fileprivate let buttonHeight: CGFloat = 64
     fileprivate let padding: CGFloat = 32
     fileprivate let blurEffect = UIVisualEffectView(effect: UIBlurEffect(style: .dark))
     fileprivate let itsAMatchImageView: UIImageView = {
@@ -80,7 +81,7 @@ class MatchView: UIView {
         button.setTitle("SEND MESSAGE", for: .normal)
         button.setTitleColor(.white, for: .normal)
         button.titleLabel?.font = UIFont.systemFont(ofSize: 18, weight: .bold)
-        button.constraintHeight(constant: 64)
+        button.constraintHeight(constant: buttonHeight)
         return button
     }()
     
@@ -89,8 +90,9 @@ class MatchView: UIView {
         button.setTitle("Keep Swiping", for: .normal)
         button.setTitleColor(.white, for: .normal)
         button.titleLabel?.font = UIFont.systemFont(ofSize: 18, weight: .bold)
-        button.constraintHeight(constant: 64)
+        button.constraintHeight(constant: buttonHeight)
         button.backgroundColor = .clear
+        button.addTarget(self, action: #selector(handleTap), for: .touchUpInside)
         return button
     }()
     
@@ -155,10 +157,10 @@ class MatchView: UIView {
             currentUserImageView, cardUserImageView
             ], customSpacing: padding)
         imageStackView.distribution = .fillEqually
-        let buttonStackView = VerticalStackView(arrangedSubviews: [sendMessageButton, keepSwipingButton], spacing: 16)
+        let buttonStackView = VerticalStackView(arrangedSubviews: [sendMessageButton, keepSwipingButton], spacing: padding / 2)
         let verticalStackView = VerticalStackView(arrangedSubviews: [
             itsAMatchImageView, desciptionLabel, imageStackView, buttonStackView
-            ], spacing: 32)
+            ], spacing: padding)
         addSubview(verticalStackView)
         let width = size * 2 + padding
         verticalStackView.centerInSuperview(size: .init(width: width, height: 0))

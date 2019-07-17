@@ -15,7 +15,6 @@ class HomeController: UIViewController {
     fileprivate let headerView = HeaderView()
     fileprivate let cardsDeckView = UIView()
     fileprivate let bottomView = BottomView()
-    fileprivate var cardViewModels = [CardViewModel]()
     fileprivate let hud = JGProgressHUD(style: .dark)
     fileprivate var currentUser: User?
     fileprivate var topCardView: CardView?
