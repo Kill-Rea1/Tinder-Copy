@@ -8,7 +8,7 @@
 
 import LBTATools
 
-class MessagesNavBar: UIView {
+class MatchesNavBar: UIView {
     
     public let backButton = UIButton(image: #imageLiteral(resourceName: "3 7"), tintColor: .lightGray)
     

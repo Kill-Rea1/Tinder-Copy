@@ -25,7 +25,9 @@
 		ED8C048122DE70630009AA2C /* SendMessageButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED8C048022DE70630009AA2C /* SendMessageButton.swift */; };
 		ED8C048322DE731C0009AA2C /* KeepSwipingButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED8C048222DE731C0009AA2C /* KeepSwipingButton.swift */; };
 		ED8C048822DF76A80009AA2C /* MessagesController.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED8C048722DF76A80009AA2C /* MessagesController.swift */; };
-		ED8C048A22DF7DE10009AA2C /* MessagesNavBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED8C048922DF7DE10009AA2C /* MessagesNavBar.swift */; };
+		ED8C048A22DF7DE10009AA2C /* MatchesNavBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED8C048922DF7DE10009AA2C /* MatchesNavBar.swift */; };
+		EDC064FD22DFA4A000C36119 /* ChatLogController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDC064FC22DFA4A000C36119 /* ChatLogController.swift */; };
+		EDC0650022DFAC5400C36119 /* MessagesNavBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDC064FF22DFAC5400C36119 /* MessagesNavBar.swift */; };
 		EDDA39D222D7EBF50073AC2E /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDDA39D122D7EBF50073AC2E /* AppDelegate.swift */; };
 		EDDA39D422D7EBF50073AC2E /* HomeController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDDA39D322D7EBF50073AC2E /* HomeController.swift */; };
 		EDDA39D722D7EBF50073AC2E /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = EDDA39D522D7EBF50073AC2E /* Main.storyboard */; };
@@ -61,7 +63,9 @@
 		ED8C048022DE70630009AA2C /* SendMessageButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SendMessageButton.swift; sourceTree = "<group>"; };
 		ED8C048222DE731C0009AA2C /* KeepSwipingButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeepSwipingButton.swift; sourceTree = "<group>"; };
 		ED8C048722DF76A80009AA2C /* MessagesController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessagesController.swift; sourceTree = "<group>"; };
-		ED8C048922DF7DE10009AA2C /* MessagesNavBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessagesNavBar.swift; sourceTree = "<group>"; };
+		ED8C048922DF7DE10009AA2C /* MatchesNavBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatchesNavBar.swift; sourceTree = "<group>"; };
+		EDC064FC22DFA4A000C36119 /* ChatLogController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatLogController.swift; sourceTree = "<group>"; };
+		EDC064FF22DFAC5400C36119 /* MessagesNavBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessagesNavBar.swift; sourceTree = "<group>"; };
 		EDDA39CE22D7EBF50073AC2E /* Tinder-Copy.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Tinder-Copy.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		EDDA39D122D7EBF50073AC2E /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		EDDA39D322D7EBF50073AC2E /* HomeController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeController.swift; sourceTree = "<group>"; };
@@ -112,8 +116,28 @@
 			isa = PBXGroup;
 			children = (
 				ED8C048722DF76A80009AA2C /* MessagesController.swift */,
+				EDC064FC22DFA4A000C36119 /* ChatLogController.swift */,
 			);
 			path = Messages;
+			sourceTree = "<group>";
+		};
+		EDC064FE22DFAC4200C36119 /* Messages */ = {
+			isa = PBXGroup;
+			children = (
+				EDC064FF22DFAC5400C36119 /* MessagesNavBar.swift */,
+				ED8C048922DF7DE10009AA2C /* MatchesNavBar.swift */,
+			);
+			path = Messages;
+			sourceTree = "<group>";
+		};
+		EDC0650122DFAC7500C36119 /* Match */ = {
+			isa = PBXGroup;
+			children = (
+				ED8C048222DE731C0009AA2C /* KeepSwipingButton.swift */,
+				ED8C048022DE70630009AA2C /* SendMessageButton.swift */,
+				ED8C047E22DE62000009AA2C /* MatchView.swift */,
+			);
+			path = Match;
 			sourceTree = "<group>";
 		};
 		EDDA39C522D7EBF50073AC2E = {
@@ -164,16 +188,14 @@
 		EDDA39E922D7F7B30073AC2E /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				EDC0650122DFAC7500C36119 /* Match */,
+				EDC064FE22DFAC4200C36119 /* Messages */,
 				EDDA39EA22D7F7D80073AC2E /* HeaderView.swift */,
 				EDDA39EC22D7FA640073AC2E /* BottomView.swift */,
 				EDDA39EF22D803980073AC2E /* CardView.swift */,
 				ED8C046622DA5AAD0009AA2C /* CustomTexttField.swift */,
 				ED8C047022DBD1440009AA2C /* SettingsCell.swift */,
 				ED8C047222DCD26B0009AA2C /* AgeRangeCell.swift */,
-				ED8C047E22DE62000009AA2C /* MatchView.swift */,
-				ED8C048022DE70630009AA2C /* SendMessageButton.swift */,
-				ED8C048222DE731C0009AA2C /* KeepSwipingButton.swift */,
-				ED8C048922DF7DE10009AA2C /* MessagesNavBar.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -335,14 +357,16 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				EDC064FD22DFA4A000C36119 /* ChatLogController.swift in Sources */,
 				ED8C046322D9348C0009AA2C /* Advertiser.swift in Sources */,
 				ED8C046722DA5AAD0009AA2C /* CustomTexttField.swift in Sources */,
 				EDDA39F022D803980073AC2E /* CardView.swift in Sources */,
 				ED8C047A22DD21950009AA2C /* UserDetailController.swift in Sources */,
+				EDC0650022DFAC5400C36119 /* MessagesNavBar.swift in Sources */,
 				EDDA39EB22D7F7D80073AC2E /* HeaderView.swift in Sources */,
 				EDDA39D422D7EBF50073AC2E /* HomeController.swift in Sources */,
 				ED8C047322DCD26B0009AA2C /* AgeRangeCell.swift in Sources */,
-				ED8C048A22DF7DE10009AA2C /* MessagesNavBar.swift in Sources */,
+				ED8C048A22DF7DE10009AA2C /* MatchesNavBar.swift in Sources */,
 				EDDA39E822D7EC4E0073AC2E /* Helpers+Extensions.swift in Sources */,
 				ED8C046F22DBB88E0009AA2C /* SettingsController.swift in Sources */,
 				EDDA39F322D8124C0073AC2E /* User.swift in Sources */,

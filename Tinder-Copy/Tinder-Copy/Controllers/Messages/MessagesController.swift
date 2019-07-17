@@ -18,7 +18,7 @@ struct Match {
     }
 }
 
-class MessageCell: LBTAListCell<Match> {
+class MatchCell: LBTAListCell<Match> {
     
     public override var item: Match! {
         didSet {
@@ -41,9 +41,10 @@ class MessageCell: LBTAListCell<Match> {
     }
 }
 
-class MessagesController: LBTAListController<MessageCell, Match>, UICollectionViewDelegateFlowLayout {
+class MessagesController: LBTAListController<MatchCell, Match>, UICollectionViewDelegateFlowLayout {
     
-    fileprivate let customNavBar = MessagesNavBar()
+    fileprivate let customNavBar = MatchesNavBar()
+    fileprivate let navHeight: CGFloat = 150
     
 //    override var items: [Match]
     
@@ -52,9 +53,9 @@ class MessagesController: LBTAListController<MessageCell, Match>, UICollectionVi
         
         collectionView.backgroundColor = .white
         view.addSubview(customNavBar)
-        customNavBar.addConsctraints(view.leadingAnchor, view.trailingAnchor, view.safeAreaLayoutGuide.topAnchor, nil, .zero, .init(width: 0, height: 150))
+        customNavBar.addConsctraints(view.leadingAnchor, view.trailingAnchor, view.safeAreaLayoutGuide.topAnchor, nil, .zero, .init(width: 0, height: navHeight))
         customNavBar.backButton.addTarget(self, action: #selector(handleBack), for: .touchUpInside)
-        collectionView.contentInset.top = 150
+        collectionView.contentInset.top = navHeight
         fetchMatches()
     }
     
@@ -73,6 +74,12 @@ class MessagesController: LBTAListController<MessageCell, Match>, UICollectionVi
             self.items = matches
             self.collectionView.reloadData()
         }
+    }
+    
+    override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let match = items[indexPath.item]
+        let chatLogController = ChatLogController(match: match)
+        navigationController?.pushViewController(chatLogController, animated: true)
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
