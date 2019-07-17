@@ -10,10 +10,9 @@ import LBTATools
 
 class CustomAccessoryView: UIView {
     
-    let messageTextView = UITextView()
-    let sendButton = UIButton(title: "Send", titleColor: .black, font: .boldSystemFont(ofSize: 18), target: nil, action: nil)
-    
-    fileprivate let placeholderLabel = UILabel(text: "Enter Message", font: .systemFont(ofSize: 18), textColor: .lightGray)
+    public let messageTextView = UITextView()
+    public let sendButton = UIButton(title: "Send", titleColor: .black, font: .boldSystemFont(ofSize: 18), target: nil, action: nil)
+    public let placeholderLabel = UILabel(text: "Enter Message", font: .systemFont(ofSize: 18), textColor: .lightGray)
     
     override var intrinsicContentSize: CGSize {
         return .zero

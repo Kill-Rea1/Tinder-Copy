@@ -7,6 +7,7 @@
 //
 
 import LBTATools
+import Firebase
 
 class ChatLogController: LBTAListController<MessageCell, Message>, UICollectionViewDelegateFlowLayout {
     
@@ -21,8 +22,10 @@ class ChatLogController: LBTAListController<MessageCell, Message>, UICollectionV
     
     // input accessory view
     
-    lazy var customAccessoryView: CustomAccessoryView = {
-        return CustomAccessoryView(frame: .init(x: 0, y: 0, width: view.frame.width, height: 50))
+    fileprivate lazy var customAccessoryView: CustomAccessoryView = {
+        let cav = CustomAccessoryView(frame: .init(x: 0, y: 0, width: view.frame.width, height: 50))
+        cav.sendButton.addTarget(self, action: #selector(handleSend), for: .touchUpInside)
+        return cav
     }()
     
     override var inputAccessoryView: UIView? {
@@ -37,15 +40,60 @@ class ChatLogController: LBTAListController<MessageCell, Message>, UICollectionV
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        items = [
-            .init(messageText: "hello", isMessageFromCurrentLoggedUser: true),
-            .init(messageText: "isMessageFromCurrentLoggedUserisMessageFromCurrentLoggedUserisMessageFromCurrentLoggedUser", isMessageFromCurrentLoggedUser: false),
-            .init(messageText: "QWEQWE", isMessageFromCurrentLoggedUser: true),
-            .init(messageText: "this new text", isMessageFromCurrentLoggedUser: true)
-        ]
-        
         setupViews()
+        fetchMessages()
+        NotificationCenter.default.addObserver(self, selector: #selector(handleKeyboardShow), name: UIResponder.keyboardDidShowNotification, object: nil)
+    }
+    
+    fileprivate func fetchMessages() {
+        guard let currentUserUid = Auth.auth().currentUser?.uid else { return }
+        let query = Firestore.firestore().collection("matches_messages").document(currentUserUid).collection(match.uid).order(by: "timestamp")
+        query.addSnapshotListener { (querySnapshot, error) in
+            if let error = error {
+                print("Failed to fetch messages:", error)
+                return
+            }
+            
+            querySnapshot?.documentChanges.forEach({ (change) in
+                if change.type == .added {
+                    let dictionary = change.document.data()
+                    self.items.append(.init(dictionary: dictionary))
+                }
+            })
+            self.collectionView.reloadData()
+            self.collectionView.scrollToItem(at: [0, self.items.count - 1], at: .bottom, animated: true)
+        }
+    }
+    
+    @objc fileprivate func handleSend() {
+        guard let currentUserUid = Auth.auth().currentUser?.uid else { return }
+        let query = Firestore.firestore().collection("matches_messages").document(currentUserUid).collection(match.uid)
+        let data = ["message": customAccessoryView.messageTextView.text ?? "",
+                    "fromId": currentUserUid,
+                    "toId": match.uid,
+                    "timestamp": Timestamp(date: Date())
+                    ] as [String: Any]
+        query.addDocument(data: data) { (error) in
+            if let error = error {
+                print("Failed to save message:", error)
+                return
+            }
+            self.customAccessoryView.messageTextView.text = nil
+            self.customAccessoryView.placeholderLabel.isHidden = false
+        }
+        let otherQuery = Firestore.firestore().collection("matches_messages").document(match.uid).collection(currentUserUid)
+        otherQuery.addDocument(data: data) { (error) in
+            if let error = error {
+                print("Failed to save message:", error)
+                return
+            }
+            self.customAccessoryView.messageTextView.text = nil
+            self.customAccessoryView.placeholderLabel.isHidden = false
+        }
+    }
+    
+    @objc fileprivate func handleKeyboardShow(notification: Notification) {
+        collectionView.scrollToItem(at: [0, items.count - 1], at: .bottom, animated: true)
     }
     
     fileprivate func setupViews() {

@@ -23,7 +23,7 @@ class MessageCell: LBTAListCell<Message> {
     override var item: Message! {
         didSet {
             
-            textView.text = item.messageText
+            textView.text = item.message
             if item.isMessageFromCurrentLoggedUser {
                 // right edge
                 bubbleContainer.backgroundColor = #colorLiteral(red: 0.07523792237, green: 0.7628311515, blue: 0.9986489415, alpha: 1)
