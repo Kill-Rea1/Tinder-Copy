@@ -28,6 +28,11 @@
 		ED8C048A22DF7DE10009AA2C /* MatchesNavBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED8C048922DF7DE10009AA2C /* MatchesNavBar.swift */; };
 		EDC064FD22DFA4A000C36119 /* ChatLogController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDC064FC22DFA4A000C36119 /* ChatLogController.swift */; };
 		EDC0650022DFAC5400C36119 /* MessagesNavBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDC064FF22DFAC5400C36119 /* MessagesNavBar.swift */; };
+		EDC0650322DFBA5600C36119 /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDC0650222DFBA5600C36119 /* Message.swift */; };
+		EDC0650522DFBA7200C36119 /* Match.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDC0650422DFBA7200C36119 /* Match.swift */; };
+		EDC0650722DFBAA200C36119 /* MessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDC0650622DFBAA200C36119 /* MessageCell.swift */; };
+		EDC0650922DFBAC100C36119 /* MatchCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDC0650822DFBAC100C36119 /* MatchCell.swift */; };
+		EDC0650B22DFC07B00C36119 /* CustomAccessotyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDC0650A22DFC07B00C36119 /* CustomAccessotyView.swift */; };
 		EDDA39D222D7EBF50073AC2E /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDDA39D122D7EBF50073AC2E /* AppDelegate.swift */; };
 		EDDA39D422D7EBF50073AC2E /* HomeController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDDA39D322D7EBF50073AC2E /* HomeController.swift */; };
 		EDDA39D722D7EBF50073AC2E /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = EDDA39D522D7EBF50073AC2E /* Main.storyboard */; };
@@ -66,6 +71,11 @@
 		ED8C048922DF7DE10009AA2C /* MatchesNavBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatchesNavBar.swift; sourceTree = "<group>"; };
 		EDC064FC22DFA4A000C36119 /* ChatLogController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatLogController.swift; sourceTree = "<group>"; };
 		EDC064FF22DFAC5400C36119 /* MessagesNavBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessagesNavBar.swift; sourceTree = "<group>"; };
+		EDC0650222DFBA5600C36119 /* Message.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Message.swift; sourceTree = "<group>"; };
+		EDC0650422DFBA7200C36119 /* Match.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Match.swift; sourceTree = "<group>"; };
+		EDC0650622DFBAA200C36119 /* MessageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageCell.swift; sourceTree = "<group>"; };
+		EDC0650822DFBAC100C36119 /* MatchCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatchCell.swift; sourceTree = "<group>"; };
+		EDC0650A22DFC07B00C36119 /* CustomAccessotyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomAccessotyView.swift; sourceTree = "<group>"; };
 		EDDA39CE22D7EBF50073AC2E /* Tinder-Copy.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Tinder-Copy.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		EDDA39D122D7EBF50073AC2E /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		EDDA39D322D7EBF50073AC2E /* HomeController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeController.swift; sourceTree = "<group>"; };
@@ -126,6 +136,9 @@
 			children = (
 				EDC064FF22DFAC5400C36119 /* MessagesNavBar.swift */,
 				ED8C048922DF7DE10009AA2C /* MatchesNavBar.swift */,
+				EDC0650622DFBAA200C36119 /* MessageCell.swift */,
+				EDC0650822DFBAC100C36119 /* MatchCell.swift */,
+				EDC0650A22DFC07B00C36119 /* CustomAccessotyView.swift */,
 			);
 			path = Messages;
 			sourceTree = "<group>";
@@ -218,6 +231,8 @@
 			children = (
 				EDDA39F222D8124C0073AC2E /* User.swift */,
 				ED8C046222D9348C0009AA2C /* Advertiser.swift */,
+				EDC0650222DFBA5600C36119 /* Message.swift */,
+				EDC0650422DFBA7200C36119 /* Match.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -361,8 +376,10 @@
 				ED8C046322D9348C0009AA2C /* Advertiser.swift in Sources */,
 				ED8C046722DA5AAD0009AA2C /* CustomTexttField.swift in Sources */,
 				EDDA39F022D803980073AC2E /* CardView.swift in Sources */,
+				EDC0650322DFBA5600C36119 /* Message.swift in Sources */,
 				ED8C047A22DD21950009AA2C /* UserDetailController.swift in Sources */,
 				EDC0650022DFAC5400C36119 /* MessagesNavBar.swift in Sources */,
+				EDC0650722DFBAA200C36119 /* MessageCell.swift in Sources */,
 				EDDA39EB22D7F7D80073AC2E /* HeaderView.swift in Sources */,
 				EDDA39D422D7EBF50073AC2E /* HomeController.swift in Sources */,
 				ED8C047322DCD26B0009AA2C /* AgeRangeCell.swift in Sources */,
@@ -375,10 +392,13 @@
 				ED8C046522DA557B0009AA2C /* RegistrationController.swift in Sources */,
 				ED8C046D22DAA3580009AA2C /* Bindable.swift in Sources */,
 				EDDA39ED22D7FA640073AC2E /* BottomView.swift in Sources */,
+				EDC0650B22DFC07B00C36119 /* CustomAccessotyView.swift in Sources */,
 				ED8C048122DE70630009AA2C /* SendMessageButton.swift in Sources */,
 				ED8C046922DA867A0009AA2C /* RegistrationViewModel.swift in Sources */,
 				ED8C047622DCF26A0009AA2C /* LoginController.swift in Sources */,
+				EDC0650922DFBAC100C36119 /* MatchCell.swift in Sources */,
 				EDDA39D222D7EBF50073AC2E /* AppDelegate.swift in Sources */,
+				EDC0650522DFBA7200C36119 /* Match.swift in Sources */,
 				EDDA39DA22D7EBF50073AC2E /* Tinder_Copy.xcdatamodeld in Sources */,
 				ED8C047122DBD1440009AA2C /* SettingsCell.swift in Sources */,
 				ED8C048322DE731C0009AA2C /* KeepSwipingButton.swift in Sources */,

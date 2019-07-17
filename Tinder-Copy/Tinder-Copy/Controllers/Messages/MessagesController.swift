@@ -9,44 +9,10 @@
 import LBTATools
 import Firebase
 
-struct Match {
-    let name, profileImageUrl: String
-    
-    init(dictionary: [String: Any]) {
-        self.name = dictionary["name"] as! String
-        self.profileImageUrl = dictionary["profileImageUrl"] as! String
-    }
-}
-
-class MatchCell: LBTAListCell<Match> {
-    
-    public override var item: Match! {
-        didSet {
-            userNameLabel.text = item.name
-            profileImageView.sd_setImage(with: URL(string: item.profileImageUrl))
-        }
-    }
-    
-    fileprivate let profileImageView = UIImageView(image: #imageLiteral(resourceName: "jane3"), contentMode: .scaleAspectFill)
-    fileprivate let userNameLabel = UILabel(text: "User name", font: .systemFont(ofSize: 14, weight: .semibold), textColor: #colorLiteral(red: 0.2549019754, green: 0.2745098174, blue: 0.3019607961, alpha: 1), textAlignment: .center, numberOfLines: 2)
-    override func setupViews() {
-        super.setupViews()
-        
-        profileImageView.clipsToBounds = true
-        profileImageView.constrainWidth(80)
-        profileImageView.constrainHeight(80)
-        profileImageView.layer.cornerRadius = 40
-        stack(stack(profileImageView, alignment: .center),
-              userNameLabel)
-    }
-}
-
 class MessagesController: LBTAListController<MatchCell, Match>, UICollectionViewDelegateFlowLayout {
     
     fileprivate let customNavBar = MatchesNavBar()
     fileprivate let navHeight: CGFloat = 150
-    
-//    override var items: [Match]
     
     override func viewDidLoad() {
         super.viewDidLoad()
