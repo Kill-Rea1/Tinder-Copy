@@ -9,26 +9,41 @@
 //import UIKit
 import LBTATools
 
-class MessagesController: UICollectionViewController {
-    
-    let customNavBar: UIView = {
-        let view = UIView(backgroundColor: .white)
-        let iconImageView = UIImageView(image: #imageLiteral(resourceName: "top_messages_icon").withRenderingMode(.alwaysTemplate), contentMode: .scaleAspectFit)
-        iconImageView.tintColor = #colorLiteral(red: 1, green: 0.4412513971, blue: 0.4679982662, alpha: 1)
-        let messagesLabel = UILabel(text: "Messages", font: .boldSystemFont(ofSize: 22), textColor: #colorLiteral(red: 1, green: 0.4412513971, blue: 0.4679982662, alpha: 1), textAlignment: .center)
-        let feedLabel = UILabel(text: "Feed", font: .boldSystemFont(ofSize: 22), textColor: .gray, textAlignment: .center)
-        view.setupShadow(opacity: 0.35, radius: 8, offset: .init(width: 0, height: 10), color: .init(white: 0, alpha: 0.3))
+class MessageCell: LBTAListCell<UIColor> {
+    let profileImageView = UIImageView(image: #imageLiteral(resourceName: "jane3"), contentMode: .scaleAspectFill)
+    let userNameLabel = UILabel(text: "User name", font: .systemFont(ofSize: 14, weight: .semibold), textColor: #colorLiteral(red: 0.2549019754, green: 0.2745098174, blue: 0.3019607961, alpha: 1), textAlignment: .center, numberOfLines: 2)
+    override func setupViews() {
+        super.setupViews()
         
-        view.stack(iconImageView.withHeight(40),
-                   view.hstack(messagesLabel, feedLabel, distribution: .fillEqually)).padTop(16)
-        return view
-    }()
+        profileImageView.clipsToBounds = true
+        profileImageView.constrainWidth(80)
+        profileImageView.constrainHeight(80)
+        profileImageView.layer.cornerRadius = 40
+        stack(stack(profileImageView, alignment: .center),
+              userNameLabel)
+    }
+}
+
+class MessagesController: LBTAListController<MessageCell, UIColor>, UICollectionViewDelegateFlowLayout {
+    
+    fileprivate let customNavBar = MessagesNavBar()
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        collectionView.backgroundColor = .white
         
+        collectionView.backgroundColor = .white
+        items = [.black, .black, .black, .black]
         view.addSubview(customNavBar)
         customNavBar.addConsctraints(view.leadingAnchor, view.trailingAnchor, view.safeAreaLayoutGuide.topAnchor, nil, .zero, .init(width: 0, height: 150))
+        customNavBar.backButton.addTarget(self, action: #selector(handleBack), for: .touchUpInside)
+        collectionView.contentInset.top = 150
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        return .init(width: 100, height: 120)
+    }
+    
+    @objc fileprivate func handleBack() {
+        navigationController?.popViewController(animated: true)
     }
 }

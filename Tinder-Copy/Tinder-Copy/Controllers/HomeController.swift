@@ -125,7 +125,7 @@ class HomeController: UIViewController {
     }
     
     @objc fileprivate func handleMessages() {
-        let messagesController = MessagesController(collectionViewLayout: UICollectionViewFlowLayout())
+        let messagesController = MessagesController()
         navigationController?.pushViewController(messagesController, animated: true)
     }
     
