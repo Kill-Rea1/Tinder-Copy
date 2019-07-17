@@ -24,15 +24,17 @@ class MessagesNavBar: UIView {
         super.init(frame: .zero)
         backgroundColor = .white
         setupShadow(opacity: 0.35, radius: 8, offset: .init(width: 0, height: 10), color: .init(white: 0, alpha: 0.3))
+        let middleStack = hstack(
+            stack(
+                userProfileImageView,
+                userNameLabel,
+                spacing: 8,
+                alignment: .center),
+            alignment: .center)
         
-        hstack(backButton,
-               stack(userProfileImageView,
-                     userNameLabel,
-                     spacing: 8,
-                     alignment: .center),
-               flagButton,
-               alignment: .center
-            ).withMargins(.init(top: 0, left: 16, bottom: 0, right: 16))
+        hstack(backButton.withWidth(50),
+               middleStack,
+               flagButton).withMargins(.init(top: 0, left: 4, bottom: 0, right: 16))
     }
     
     required init?(coder aDecoder: NSCoder) {
