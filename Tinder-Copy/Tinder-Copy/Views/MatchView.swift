@@ -7,8 +7,33 @@
 //
 
 import UIKit
+import Firebase
 
 class MatchView: UIView {
+    
+    public var currentUser: User!
+    
+    public var cardUID: String! {
+        didSet {
+            let query = Firestore.firestore().collection("users")
+            query.document(cardUID).getDocument { (snapshot, error) in
+                if let error = error {
+                    print(error)
+                    return
+                }
+                guard let dictionary = snapshot?.data() else { return }
+                let user = User(dictionary: dictionary)
+                guard let cardUserUrl = URL(string: user.imageUrl1 ?? "") else { return }
+                self.desciptionLabel.text = "You and \(user.name ?? "") have liked\neach other"
+                self.cardUserImageView.sd_setImage(with: cardUserUrl)
+                guard let currentUserUrl = URL(string: self.currentUser.imageUrl1 ?? "") else { return }
+                self.currentUserImageView.sd_setImage(with: currentUserUrl, completed: { (_, _, _, _) in
+                    self.setupAnimations()
+                })
+            }
+        }
+    }
+    
     fileprivate let size: CGFloat = 140
     fileprivate let padding: CGFloat = 32
     fileprivate let blurEffect = UIVisualEffectView(effect: UIBlurEffect(style: .dark))
@@ -19,7 +44,6 @@ class MatchView: UIView {
     }()
     fileprivate let desciptionLabel: UILabel = {
         let label = UILabel()
-        label.text = "You and X have liked\neach other"
         label.textAlignment = .center
         label.numberOfLines = 2
         label.textColor = .white
@@ -27,7 +51,7 @@ class MatchView: UIView {
         return label
     }()
     fileprivate lazy var currentUserImageView: UIImageView = {
-        let iv = UIImageView(image: #imageLiteral(resourceName: "kelly1"))
+        let iv = UIImageView()
         iv.contentMode = .scaleAspectFill
         iv.clipsToBounds = true
         iv.constraintWidth(constant: size)
@@ -39,7 +63,7 @@ class MatchView: UIView {
     }()
     
     fileprivate lazy var cardUserImageView: UIImageView = {
-        let iv = UIImageView(image: #imageLiteral(resourceName: "jane3"))
+        let iv = UIImageView()
         iv.contentMode = .scaleAspectFill
         iv.clipsToBounds = true
         iv.constraintWidth(constant: size)
@@ -47,6 +71,7 @@ class MatchView: UIView {
         iv.layer.cornerRadius = size / 2
         iv.layer.borderWidth = 2
         iv.layer.borderColor = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0).cgColor
+        iv.alpha = 0
         return iv
     }()
     
@@ -54,6 +79,7 @@ class MatchView: UIView {
         let button = SendMessageButton(type: .system)
         button.setTitle("SEND MESSAGE", for: .normal)
         button.setTitleColor(.white, for: .normal)
+        button.titleLabel?.font = UIFont.systemFont(ofSize: 18, weight: .bold)
         button.constraintHeight(constant: 64)
         return button
     }()
@@ -62,32 +88,44 @@ class MatchView: UIView {
         let button = KeepSwipingButton(type: .system)
         button.setTitle("Keep Swiping", for: .normal)
         button.setTitleColor(.white, for: .normal)
+        button.titleLabel?.font = UIFont.systemFont(ofSize: 18, weight: .bold)
         button.constraintHeight(constant: 64)
         button.backgroundColor = .clear
         return button
     }()
+    
+    fileprivate lazy var views = [
+        itsAMatchImageView,
+        desciptionLabel,
+        currentUserImageView,
+        cardUserImageView,
+        sendMessageButton,
+        keepSwipingButton
+    ]
     
     override init(frame: CGRect) {
         super.init(frame: frame)
         alpha = 0
         setupBlurView()
         setupLayout()
-        setupAnimations()
     }
     
     fileprivate func setupAnimations() {
         // starting positions
         let angle = 30 * CGFloat.pi / 180
-        currentUserImageView.transform = CGAffineTransform(rotationAngle: -angle).concatenating(CGAffineTransform(translationX: 200, y: 0))
-        cardUserImageView.transform = CGAffineTransform(rotationAngle: angle).concatenating(CGAffineTransform(translationX: -200, y: 0))
-        sendMessageButton.transform = CGAffineTransform(translationX: -500, y: 0)
-        keepSwipingButton.transform = CGAffineTransform(translationX: 500, y: 0)
+        let imageStartPositionX: CGFloat = 200
+        let buttonStartPositionX: CGFloat = 500
+        currentUserImageView.transform = CGAffineTransform(rotationAngle: -angle).concatenating(CGAffineTransform(translationX: imageStartPositionX, y: 0))
+        cardUserImageView.transform = CGAffineTransform(rotationAngle: angle).concatenating(CGAffineTransform(translationX: -imageStartPositionX, y: 0))
+        sendMessageButton.transform = CGAffineTransform(translationX: -buttonStartPositionX, y: 0)
+        keepSwipingButton.transform = CGAffineTransform(translationX: buttonStartPositionX, y: 0)
         
         // keyframe animations for segmented animations
         UIView.animateKeyframes(withDuration: 1.3, delay: 0, options: .calculationModeCubic, animations: {
             
             // animation 1 - translation back to original position
             UIView.addKeyframe(withRelativeStartTime: 0, relativeDuration: 0.4, animations: {
+                self.views.forEach({$0.alpha = 1})
                 self.currentUserImageView.transform = CGAffineTransform(rotationAngle: -angle)
                 self.cardUserImageView.transform = CGAffineTransform(rotationAngle: angle)
             })
@@ -112,13 +150,15 @@ class MatchView: UIView {
     }
     
     fileprivate func setupLayout() {
+        views.forEach({$0.alpha = 0})
         let imageStackView = UIStackView(arrangedSubviews: [
             currentUserImageView, cardUserImageView
             ], customSpacing: padding)
         imageStackView.distribution = .fillEqually
+        let buttonStackView = VerticalStackView(arrangedSubviews: [sendMessageButton, keepSwipingButton], spacing: 16)
         let verticalStackView = VerticalStackView(arrangedSubviews: [
-            itsAMatchImageView, desciptionLabel, imageStackView, sendMessageButton, keepSwipingButton
-            ], spacing: 16)
+            itsAMatchImageView, desciptionLabel, imageStackView, buttonStackView
+            ], spacing: 32)
         addSubview(verticalStackView)
         let width = size * 2 + padding
         verticalStackView.centerInSuperview(size: .init(width: width, height: 0))
