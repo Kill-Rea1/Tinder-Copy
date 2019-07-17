@@ -9,7 +9,7 @@
 import LBTATools
 import Firebase
 
-class MessagesController: LBTAListController<MatchCell, Match>, UICollectionViewDelegateFlowLayout {
+class MatchesController: LBTAListHeaderController<MatchCell, Match, MatchesHeader>, UICollectionViewDelegateFlowLayout {
     
     fileprivate let customNavBar = MatchesNavBar()
     fileprivate let navHeight: CGFloat = 150
@@ -25,18 +25,22 @@ class MessagesController: LBTAListController<MatchCell, Match>, UICollectionView
         fetchMatches()
     }
     
+    override func setupHeader(_ header: MatchesHeader) {
+        header.matchesHorizontalController.rootMatchesController = self
+    }
+    
+    func didSelectMatchFromHeader(match: Match) {
+        let chatLogController = ChatLogController(match: match)
+        navigationController?.pushViewController(chatLogController, animated: true)
+    }
+    
     fileprivate func fetchMatches() {
-        guard let uid = Auth.auth().currentUser?.uid else { return }
-        Firestore.firestore().collection("matches_messages").document(uid).collection("matches").getDocuments { (querySnapshot, error) in
+        Firestore.firestore().fetchMatches { (matches, error) in
             if let error = error {
                 print("Failed to match matches:", error)
                 return
             }
-            var matches = [Match]()
-            querySnapshot?.documents.forEach({ (documentSnaphot) in
-                let dictionary = documentSnaphot.data()
-                matches.append(.init(dictionary: dictionary))
-            })
+            guard let matches = matches else { return }
             self.items = matches
             self.collectionView.reloadData()
         }
@@ -46,6 +50,10 @@ class MessagesController: LBTAListController<MatchCell, Match>, UICollectionView
         let match = items[indexPath.item]
         let chatLogController = ChatLogController(match: match)
         navigationController?.pushViewController(chatLogController, animated: true)
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
+        return .init(width: view.frame.width, height: 250)
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {

@@ -208,4 +208,19 @@ extension Firestore {
             completion(user, nil)
         }
     }
+    func fetchMatches(completion: @escaping ([Match]?, Error?) -> ()) {
+        guard let uid = Auth.auth().currentUser?.uid else { return }
+        Firestore.firestore().collection("matches_messages").document(uid).collection("matches").getDocuments { (querySnapshot, error) in
+            if let error = error {
+                completion(nil, error)
+                return
+            }
+            var matches = [Match]()
+            querySnapshot?.documents.forEach({ (documentSnaphot) in
+                let dictionary = documentSnaphot.data()
+                matches.append(.init(dictionary: dictionary))
+            })
+            completion(matches, nil)
+        }
+    }
 }

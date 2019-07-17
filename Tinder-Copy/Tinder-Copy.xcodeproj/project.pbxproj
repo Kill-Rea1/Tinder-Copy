@@ -33,6 +33,8 @@
 		EDC0650722DFBAA200C36119 /* MessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDC0650622DFBAA200C36119 /* MessageCell.swift */; };
 		EDC0650922DFBAC100C36119 /* MatchCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDC0650822DFBAC100C36119 /* MatchCell.swift */; };
 		EDC0650B22DFC07B00C36119 /* CustomAccessotyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDC0650A22DFC07B00C36119 /* CustomAccessotyView.swift */; };
+		EDC0650D22DFE7D800C36119 /* MatchesHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDC0650C22DFE7D800C36119 /* MatchesHeader.swift */; };
+		EDC0650F22DFE80E00C36119 /* MatchesHorizontalController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDC0650E22DFE80E00C36119 /* MatchesHorizontalController.swift */; };
 		EDDA39D222D7EBF50073AC2E /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDDA39D122D7EBF50073AC2E /* AppDelegate.swift */; };
 		EDDA39D422D7EBF50073AC2E /* HomeController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDDA39D322D7EBF50073AC2E /* HomeController.swift */; };
 		EDDA39D722D7EBF50073AC2E /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = EDDA39D522D7EBF50073AC2E /* Main.storyboard */; };
@@ -76,6 +78,8 @@
 		EDC0650622DFBAA200C36119 /* MessageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageCell.swift; sourceTree = "<group>"; };
 		EDC0650822DFBAC100C36119 /* MatchCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatchCell.swift; sourceTree = "<group>"; };
 		EDC0650A22DFC07B00C36119 /* CustomAccessotyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomAccessotyView.swift; sourceTree = "<group>"; };
+		EDC0650C22DFE7D800C36119 /* MatchesHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatchesHeader.swift; sourceTree = "<group>"; };
+		EDC0650E22DFE80E00C36119 /* MatchesHorizontalController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatchesHorizontalController.swift; sourceTree = "<group>"; };
 		EDDA39CE22D7EBF50073AC2E /* Tinder-Copy.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Tinder-Copy.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		EDDA39D122D7EBF50073AC2E /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		EDDA39D322D7EBF50073AC2E /* HomeController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeController.swift; sourceTree = "<group>"; };
@@ -127,6 +131,7 @@
 			children = (
 				ED8C048722DF76A80009AA2C /* MessagesController.swift */,
 				EDC064FC22DFA4A000C36119 /* ChatLogController.swift */,
+				EDC0650E22DFE80E00C36119 /* MatchesHorizontalController.swift */,
 			);
 			path = Messages;
 			sourceTree = "<group>";
@@ -139,6 +144,7 @@
 				EDC0650622DFBAA200C36119 /* MessageCell.swift */,
 				EDC0650822DFBAC100C36119 /* MatchCell.swift */,
 				EDC0650A22DFC07B00C36119 /* CustomAccessotyView.swift */,
+				EDC0650C22DFE7D800C36119 /* MatchesHeader.swift */,
 			);
 			path = Messages;
 			sourceTree = "<group>";
@@ -379,11 +385,13 @@
 				EDC0650322DFBA5600C36119 /* Message.swift in Sources */,
 				ED8C047A22DD21950009AA2C /* UserDetailController.swift in Sources */,
 				EDC0650022DFAC5400C36119 /* MessagesNavBar.swift in Sources */,
+				EDC0650F22DFE80E00C36119 /* MatchesHorizontalController.swift in Sources */,
 				EDC0650722DFBAA200C36119 /* MessageCell.swift in Sources */,
 				EDDA39EB22D7F7D80073AC2E /* HeaderView.swift in Sources */,
 				EDDA39D422D7EBF50073AC2E /* HomeController.swift in Sources */,
 				ED8C047322DCD26B0009AA2C /* AgeRangeCell.swift in Sources */,
 				ED8C048A22DF7DE10009AA2C /* MatchesNavBar.swift in Sources */,
+				EDC0650D22DFE7D800C36119 /* MatchesHeader.swift in Sources */,
 				EDDA39E822D7EC4E0073AC2E /* Helpers+Extensions.swift in Sources */,
 				ED8C046F22DBB88E0009AA2C /* SettingsController.swift in Sources */,
 				EDDA39F322D8124C0073AC2E /* User.swift in Sources */,

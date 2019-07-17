@@ -127,7 +127,7 @@ class HomeController: UIViewController {
     }
     
     @objc fileprivate func handleMessages() {
-        let messagesController = MessagesController()
+        let messagesController = MatchesController()
         navigationController?.pushViewController(messagesController, animated: true)
     }
     
