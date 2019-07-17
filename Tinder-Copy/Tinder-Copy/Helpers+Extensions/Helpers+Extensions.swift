@@ -14,22 +14,6 @@ struct AnchoredConstraints {
 }
 
 extension UIView {
-    func fillSuperview(padding: UIEdgeInsets = .zero) {
-        translatesAutoresizingMaskIntoConstraints = false
-        if let superviewTopAnchor = superview?.topAnchor {
-            topAnchor.constraint(equalTo: superviewTopAnchor, constant: padding.top).isActive = true
-        }
-        if let superviewLeadingAnchorr = superview?.leadingAnchor {
-            leadingAnchor.constraint(equalTo: superviewLeadingAnchorr, constant: padding.left).isActive = true
-        }
-        if let superviewBottomAnchor = superview?.bottomAnchor {
-            bottomAnchor.constraint(equalTo: superviewBottomAnchor, constant: -padding.bottom).isActive = true
-        }
-        if let superviewTrailimgAnchor = superview?.trailingAnchor {
-            trailingAnchor.constraint(equalTo: superviewTrailimgAnchor, constant: -padding.right).isActive = true
-        }
-    }
-    
     @discardableResult
     func addConsctraints(_ leading: NSLayoutXAxisAnchor?, _ trailing: NSLayoutXAxisAnchor?, _ top: NSLayoutYAxisAnchor?, _ bottom: NSLayoutYAxisAnchor?, _ padding: UIEdgeInsets = .zero, _ size: CGSize = .zero) -> AnchoredConstraints {
         translatesAutoresizingMaskIntoConstraints = false

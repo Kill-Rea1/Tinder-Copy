@@ -22,8 +22,10 @@ class HomeController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        navigationController?.navigationBar.isHidden = true
         setupStackView()
         headerView.settingsButton.addTarget(self, action: #selector(handleSettings), for: .touchUpInside)
+        headerView.messageButton.addTarget(self, action: #selector(handleMessages), for: .touchUpInside)
         bottomView.refreshButton.addTarget(self, action: #selector(handleRefresh), for: .touchUpInside)
         bottomView.likeButton.addTarget(self, action: #selector(handleLike), for: .touchUpInside)
         bottomView.dislikeButton.addTarget(self, action: #selector(handleDislike), for: .touchUpInside)
@@ -120,6 +122,11 @@ class HomeController: UIViewController {
     @objc fileprivate func handleRefresh() {
         cardsDeckView.subviews.forEach({$0.removeFromSuperview()})
         fetchSwipes()
+    }
+    
+    @objc fileprivate func handleMessages() {
+        let messagesController = MessagesController(collectionViewLayout: UICollectionViewFlowLayout())
+        navigationController?.pushViewController(messagesController, animated: true)
     }
     
     @objc fileprivate func handleSettings() {

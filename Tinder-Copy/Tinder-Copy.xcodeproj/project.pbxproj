@@ -24,6 +24,7 @@
 		ED8C047F22DE62000009AA2C /* MatchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED8C047E22DE62000009AA2C /* MatchView.swift */; };
 		ED8C048122DE70630009AA2C /* SendMessageButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED8C048022DE70630009AA2C /* SendMessageButton.swift */; };
 		ED8C048322DE731C0009AA2C /* KeepSwipingButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED8C048222DE731C0009AA2C /* KeepSwipingButton.swift */; };
+		ED8C048822DF76A80009AA2C /* MessagesController.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED8C048722DF76A80009AA2C /* MessagesController.swift */; };
 		EDDA39D222D7EBF50073AC2E /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDDA39D122D7EBF50073AC2E /* AppDelegate.swift */; };
 		EDDA39D422D7EBF50073AC2E /* HomeController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDDA39D322D7EBF50073AC2E /* HomeController.swift */; };
 		EDDA39D722D7EBF50073AC2E /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = EDDA39D522D7EBF50073AC2E /* Main.storyboard */; };
@@ -58,6 +59,7 @@
 		ED8C047E22DE62000009AA2C /* MatchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatchView.swift; sourceTree = "<group>"; };
 		ED8C048022DE70630009AA2C /* SendMessageButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SendMessageButton.swift; sourceTree = "<group>"; };
 		ED8C048222DE731C0009AA2C /* KeepSwipingButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeepSwipingButton.swift; sourceTree = "<group>"; };
+		ED8C048722DF76A80009AA2C /* MessagesController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessagesController.swift; sourceTree = "<group>"; };
 		EDDA39CE22D7EBF50073AC2E /* Tinder-Copy.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Tinder-Copy.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		EDDA39D122D7EBF50073AC2E /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		EDDA39D322D7EBF50073AC2E /* HomeController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeController.swift; sourceTree = "<group>"; };
@@ -102,6 +104,14 @@
 				ED8C047C22DD35A80009AA2C /* SwipingPhotosController.swift */,
 			);
 			path = "User Detail";
+			sourceTree = "<group>";
+		};
+		ED8C048622DF767D0009AA2C /* Messages */ = {
+			isa = PBXGroup;
+			children = (
+				ED8C048722DF76A80009AA2C /* MessagesController.swift */,
+			);
+			path = Messages;
 			sourceTree = "<group>";
 		};
 		EDDA39C522D7EBF50073AC2E = {
@@ -168,6 +178,7 @@
 		EDDA39EE22D800E10073AC2E /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				ED8C048622DF767D0009AA2C /* Messages */,
 				ED8C047B22DD355C0009AA2C /* User Detail */,
 				EDDA39D322D7EBF50073AC2E /* HomeController.swift */,
 				ED8C046E22DBB88E0009AA2C /* SettingsController.swift */,
@@ -331,6 +342,7 @@
 				EDDA39E822D7EC4E0073AC2E /* Helpers+Extensions.swift in Sources */,
 				ED8C046F22DBB88E0009AA2C /* SettingsController.swift in Sources */,
 				EDDA39F322D8124C0073AC2E /* User.swift in Sources */,
+				ED8C048822DF76A80009AA2C /* MessagesController.swift in Sources */,
 				ED8C047F22DE62000009AA2C /* MatchView.swift in Sources */,
 				ED8C046522DA557B0009AA2C /* RegistrationController.swift in Sources */,
 				ED8C046D22DAA3580009AA2C /* Bindable.swift in Sources */,

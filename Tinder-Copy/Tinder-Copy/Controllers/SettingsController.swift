@@ -242,26 +242,7 @@ class SettingsController: UITableViewController {
     
     @objc fileprivate func handleSave() {
         guard let uid = Auth.auth().currentUser?.uid else { return }
-        var documentData: [String: Any] = [
-            "uid": uid,
-            "fullName": user?.name ?? "",
-            "profession": user?.profession ?? "",
-            "age": user?.age ?? 18,
-//            "imageUrl1": user?.imageUrl1 ?? "",
-//            "imageUrl2": user?.imageUrl2 ?? "",
-//            "imageUrl3": user?.imageUrl3 ?? "",
-            "minSeekingAge": user?.minSeekingAge ?? User.defaultMinSeekingAge,
-            "maxSeekingAge": user?.maxSeekingAge ?? User.defaultMaxSeekingAge
-        ]
-        if let imageUrl1 = user?.imageUrl1 {
-            documentData["imageUrl1"] = imageUrl1
-        }
-        if let imageUrl2 = user?.imageUrl2 {
-            documentData["imageUrl2"] = imageUrl2
-        }
-        if let imageUrl3 = user?.imageUrl3 {
-            documentData["imageUrl3"] = imageUrl3
-        }
+        let documentData = getDocumentData()
         let hud = JGProgressHUD(style: .dark)
         hud.textLabel.text = "Saving Profiel"
         hud.show(in: view)
@@ -275,6 +256,32 @@ class SettingsController: UITableViewController {
                 self.delegate?.didSaveSettings()
             })
         }
+    }
+    
+    fileprivate func getDocumentData() -> [String: Any] {
+        var documentData = [String: Any]()
+        if let uid = Auth.auth().currentUser?.uid {
+            documentData["uid"] = uid
+        }
+        if let fullName = user?.name {
+            documentData["fullName"] = fullName
+        }
+        if let profession = user?.profession {
+            documentData["profession"] = profession
+        }
+        if let imageUrl1 = user?.imageUrl1 {
+            documentData["imageUrl1"] = imageUrl1
+        }
+        if let imageUrl2 = user?.imageUrl2 {
+            documentData["imageUrl2"] = imageUrl2
+        }
+        if let imageUrl3 = user?.imageUrl3 {
+            documentData["imageUrl3"] = imageUrl3
+        }
+        documentData["age"] = user?.age ?? 18
+        documentData["minSeekingAge"] = user?.minSeekingAge ?? User.defaultMinSeekingAge
+        documentData["maxSeekingAge"] = user?.maxSeekingAge ?? User.defaultMaxSeekingAge
+        return documentData
     }
     
     @objc fileprivate func handleCancel() {
