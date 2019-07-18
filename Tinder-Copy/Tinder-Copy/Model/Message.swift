@@ -15,10 +15,10 @@ struct Message {
     let isMessageFromCurrentLoggedUser: Bool
     
     init(dictionary: [String: Any]) {
-        self.message = dictionary["message"] as! String
-        self.fromId = dictionary["fromId"] as! String
-        self.toId = dictionary["toId"] as! String
-        self.timestamp = dictionary["timestamp"] as! Timestamp
+        self.message = dictionary["message"] as? String ?? ""
+        self.fromId = dictionary["fromId"] as? String ?? ""
+        self.toId = dictionary["toId"] as? String ?? ""
+        self.timestamp = dictionary["timestamp"] as? Timestamp ?? Timestamp(date: Date())
         self.isMessageFromCurrentLoggedUser = Auth.auth().currentUser?.uid == fromId
     }
 }

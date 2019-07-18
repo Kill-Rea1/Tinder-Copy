@@ -9,15 +9,30 @@
 import LBTATools
 import Firebase
 
-class RecentMessageCell: LBTAListCell<UIColor> {
+struct RecentMessage {
+    let name, text, profileImageUrl, uid: String
+    let timestamp: Timestamp
+    
+    init(dictionary: [String: Any]) {
+        self.name = dictionary["name"] as? String ?? ""
+        self.text = dictionary["text"] as? String ?? ""
+        self.profileImageUrl = dictionary["profileImageUrl"] as? String ?? ""
+        self.uid = dictionary["uid"] as? String ?? ""
+        self.timestamp = dictionary["timestamp"] as? Timestamp ?? Timestamp(date: Date())
+    }
+}
+
+class RecentMessageCell: LBTAListCell<RecentMessage> {
     
     let userProfileImageView = CircularImageView(width: 94, image: #imageLiteral(resourceName: "kelly1"))
     let usernameLabel = UILabel(text: "Name", font: .boldSystemFont(ofSize: 18))
     let messageTextLabel = UILabel(text: "Text", font: .systemFont(ofSize: 16), numberOfLines: 2)
     
-    override var item: UIColor! {
+    override var item: RecentMessage! {
         didSet {
-            backgroundColor = .white
+            userProfileImageView.sd_setImage(with: URL(string: item.profileImageUrl))
+            usernameLabel.text = item.name
+            messageTextLabel.text = item.text
         }
     }
     
@@ -37,16 +52,43 @@ class RecentMessageCell: LBTAListCell<UIColor> {
     }
 }
 
-class MatchesController: LBTAListHeaderController<RecentMessageCell, UIColor, MatchesHeader>, UICollectionViewDelegateFlowLayout {
+class MatchesController: LBTAListHeaderController<RecentMessageCell, RecentMessage, MatchesHeader>, UICollectionViewDelegateFlowLayout {
     
     fileprivate let customNavBar = MatchesNavBar()
     fileprivate let navHeight: CGFloat = 150
+    fileprivate var recentMessagesDictionary = [String: RecentMessage]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         setupViews()
-        items = [.black, .red, .blue, .green, .purple, .yellow]
+        fetchRecentMessages()
+    }
+    
+    fileprivate func fetchRecentMessages() {
+        guard let currentUserUid = Auth.auth().currentUser?.uid else { return }
+        let query = Firestore.firestore().collection("matches_messages").document(currentUserUid).collection("recent_messages")
+        query.addSnapshotListener { (querySnapshot, error) in
+            if let error = error {
+                print("Failed to fetch resent messages:", error)
+            }
+            querySnapshot?.documentChanges.forEach({ (change) in
+                if change.type == .added || change.type == .modified {
+                    let dictionary = change.document.data()
+                    let recentMessage = RecentMessage(dictionary: dictionary)
+                    self.recentMessagesDictionary[recentMessage.uid] = recentMessage
+                }
+            })
+            self.resetItems()
+        }
+    }
+    
+    fileprivate func resetItems() {
+        let values = Array(recentMessagesDictionary.values)
+        items = values.sorted(by: { (rm1, rm2) -> Bool in
+            return rm1.timestamp.compare(rm2.timestamp) == .orderedDescending
+        })
+        collectionView.reloadData()
     }
     
     override func setupHeader(_ header: MatchesHeader) {
@@ -69,18 +111,6 @@ class MatchesController: LBTAListHeaderController<RecentMessageCell, UIColor, Ma
         view.addSubview(statusBarCover)
         statusBarCover.addConsctraints(view.leadingAnchor, view.trailingAnchor, view.topAnchor, view.safeAreaLayoutGuide.topAnchor)
     }
-    
-//    fileprivate func fetchMatches() {
-//        Firestore.firestore().fetchMatches { (matches, error) in
-//            if let error = error {
-//                print("Failed to match matches:", error)
-//                return
-//            }
-//            guard let matches = matches else { return }
-//            self.items = matches
-//            self.collectionView.reloadData()
-//        }
-//    }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
         return .init(width: view.frame.width, height: 250)
