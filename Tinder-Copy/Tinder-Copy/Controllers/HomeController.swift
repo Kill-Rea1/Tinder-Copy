@@ -127,8 +127,10 @@ class HomeController: UIViewController {
     }
     
     @objc fileprivate func handleMessages() {
-        let messagesController = MatchesController()
-        navigationController?.pushViewController(messagesController, animated: true)
+        let mathesController = MatchesController()
+        guard let currentUser = currentUser else { return }
+        mathesController.currentUser = currentUser
+        navigationController?.pushViewController(mathesController, animated: true)
     }
     
     @objc fileprivate func handleSettings() {

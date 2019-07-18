@@ -14,7 +14,8 @@ class ChatLogController: LBTAListController<MessageCell, Message>, UICollectionV
     fileprivate lazy var customNavBar = MessagesNavBar(match: self.match)
     fileprivate let navHeight: CGFloat = 120
     fileprivate let match: Match
-    fileprivate var currentUser: User!
+    public var currentUser: User!
+    fileprivate var listener: ListenerRegistration!
     
     init(match: Match) {
         self.match = match
@@ -41,27 +42,23 @@ class ChatLogController: LBTAListController<MessageCell, Message>, UICollectionV
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        fetchCurrentUser()
         setupViews()
         fetchMessages()
         NotificationCenter.default.addObserver(self, selector: #selector(handleKeyboardShow), name: UIResponder.keyboardDidShowNotification, object: nil)
     }
     
-    fileprivate func fetchCurrentUser() {
-        Firestore.firestore().collection("users").document(Auth.auth().currentUser?.uid ?? "").getDocument { (snapshot, error) in
-            if let error = error {
-                print("Failed to fetch user:", error)
-                return
-            }
-            guard let dictionary = snapshot?.data() else { return }
-            self.currentUser = User(dictionary: dictionary)
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        if isMovingFromParent {
+            listener.remove()
+            NotificationCenter.default.removeObserver(self)
         }
     }
     
     fileprivate func fetchMessages() {
         guard let currentUserUid = Auth.auth().currentUser?.uid else { return }
         let query = Firestore.firestore().collection("matches_messages").document(currentUserUid).collection(match.uid).order(by: "timestamp")
-        query.addSnapshotListener { (querySnapshot, error) in
+        listener = query.addSnapshotListener { (querySnapshot, error) in
             if let error = error {
                 print("Failed to fetch messages:", error)
                 return
@@ -79,7 +76,6 @@ class ChatLogController: LBTAListController<MessageCell, Message>, UICollectionV
     }
     
     @objc fileprivate func handleSend() {
-        
         guard let currentUserUid = Auth.auth().currentUser?.uid else { return }
         saveToFromMessages(currentUserUid)
         saveToFromRecentMessages(currentUserUid)

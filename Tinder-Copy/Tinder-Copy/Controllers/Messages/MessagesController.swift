@@ -24,9 +24,9 @@ struct RecentMessage {
 
 class RecentMessageCell: LBTAListCell<RecentMessage> {
     
-    let userProfileImageView = CircularImageView(width: 94, image: #imageLiteral(resourceName: "kelly1"))
-    let usernameLabel = UILabel(text: "Name", font: .boldSystemFont(ofSize: 18))
-    let messageTextLabel = UILabel(text: "Text", font: .systemFont(ofSize: 16), numberOfLines: 2)
+    fileprivate let userProfileImageView = CircularImageView(width: 94, image: #imageLiteral(resourceName: "kelly1"))
+    fileprivate let usernameLabel = UILabel(text: "Name", font: .boldSystemFont(ofSize: 18))
+    fileprivate let messageTextLabel = UILabel(text: "Text", font: .systemFont(ofSize: 16), numberOfLines: 2)
     
     override var item: RecentMessage! {
         didSet {
@@ -57,6 +57,8 @@ class MatchesController: LBTAListHeaderController<RecentMessageCell, RecentMessa
     fileprivate let customNavBar = MatchesNavBar()
     fileprivate let navHeight: CGFloat = 150
     fileprivate var recentMessagesDictionary = [String: RecentMessage]()
+    fileprivate var listener: ListenerRegistration!
+    public var currentUser: User!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -65,10 +67,17 @@ class MatchesController: LBTAListHeaderController<RecentMessageCell, RecentMessa
         fetchRecentMessages()
     }
     
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        if isMovingFromParent {
+            listener.remove()
+        }
+    }
+    
     fileprivate func fetchRecentMessages() {
         guard let currentUserUid = Auth.auth().currentUser?.uid else { return }
         let query = Firestore.firestore().collection("matches_messages").document(currentUserUid).collection("recent_messages")
-        query.addSnapshotListener { (querySnapshot, error) in
+        listener = query.addSnapshotListener { (querySnapshot, error) in
             if let error = error {
                 print("Failed to fetch resent messages:", error)
             }
@@ -97,6 +106,7 @@ class MatchesController: LBTAListHeaderController<RecentMessageCell, RecentMessa
     
     func didSelectMatchFromHeader(match: Match) {
         let chatLogController = ChatLogController(match: match)
+        chatLogController.currentUser = currentUser
         navigationController?.pushViewController(chatLogController, animated: true)
     }
     
@@ -121,6 +131,7 @@ class MatchesController: LBTAListHeaderController<RecentMessageCell, RecentMessa
         ]
         let match = Match(dictionary: dictionary)
         let chatLogController = ChatLogController(match: match)
+        chatLogController.currentUser = currentUser
         navigationController?.pushViewController(chatLogController, animated: true)
     }
     
