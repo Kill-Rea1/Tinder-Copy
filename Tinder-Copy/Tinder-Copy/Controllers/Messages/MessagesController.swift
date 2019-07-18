@@ -112,6 +112,18 @@ class MatchesController: LBTAListHeaderController<RecentMessageCell, RecentMessa
         statusBarCover.addConsctraints(view.leadingAnchor, view.trailingAnchor, view.topAnchor, view.safeAreaLayoutGuide.topAnchor)
     }
     
+    override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let recentMessage = items[indexPath.item]
+        let dictionary = [
+            "name": recentMessage.name,
+            "profileImageUrl": recentMessage.profileImageUrl,
+            "uid": recentMessage.uid
+        ]
+        let match = Match(dictionary: dictionary)
+        let chatLogController = ChatLogController(match: match)
+        navigationController?.pushViewController(chatLogController, animated: true)
+    }
+    
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
         return .init(width: view.frame.width, height: 250)
     }
