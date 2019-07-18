@@ -10,6 +10,8 @@ import LBTATools
 
 class MatchCell: LBTAListCell<Match> {
     
+    fileprivate let imageSize: CGFloat = 94
+    
     public override var item: Match! {
         didSet {
             userNameLabel.text = item.name
@@ -23,9 +25,9 @@ class MatchCell: LBTAListCell<Match> {
         super.setupViews()
         
         profileImageView.clipsToBounds = true
-        profileImageView.constrainWidth(80)
-        profileImageView.constrainHeight(80)
-        profileImageView.layer.cornerRadius = 40
+        profileImageView.constrainWidth(imageSize)
+        profileImageView.constrainHeight(imageSize)
+        profileImageView.layer.cornerRadius = imageSize / 2
         stack(stack(profileImageView, alignment: .center),
               userNameLabel)
     }
