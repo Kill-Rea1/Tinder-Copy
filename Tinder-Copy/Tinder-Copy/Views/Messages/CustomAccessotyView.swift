@@ -46,3 +46,15 @@ class CustomAccessoryView: UIView {
         fatalError()
     }
 }
+
+extension CustomAccessoryView: UIPickerViewDelegate {
+    func pickerView(_ pickerView: UIPickerView, viewForRow row: Int, forComponent component: Int, reusing view: UIView?) -> UIView {
+        let pickerLabel = UILabel()
+        pickerLabel.textColor = UIColor.black
+//        pickerLabel.text = "PickerView Cell Title"
+        // pickerLabel.font = UIFont(name: pickerLabel.font.fontName, size: 15)
+        pickerLabel.font = UIFont(name: "Arial-BoldMT", size: 15) // In this use your custom font
+        pickerLabel.textAlignment = NSTextAlignment.center
+        return pickerLabel
+    }
+}

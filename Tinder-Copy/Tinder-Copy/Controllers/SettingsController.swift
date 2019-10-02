@@ -13,6 +13,8 @@ import JGProgressHUD
 
 protocol SettingsControllerDelegate {
     func didSaveSettings()
+    
+    func didLogout()
 }
 
 class CustomImagePickerController: UIImagePickerController {
@@ -234,17 +236,19 @@ class SettingsController: UITableViewController {
     @objc fileprivate func handleLogout() {
         do {
             try Auth.auth().signOut()
+//            delegate?.didLogout()
         } catch {
             print(error)
         }
         dismiss(animated: true)
+        delegate?.didLogout()
     }
     
     @objc fileprivate func handleSave() {
         guard let uid = Auth.auth().currentUser?.uid else { return }
         let documentData = getDocumentData()
         let hud = JGProgressHUD(style: .dark)
-        hud.textLabel.text = "Saving Profiel"
+        hud.textLabel.text = "Saving Profile"
         hud.show(in: view)
         Firestore.firestore().collection("users").document(uid).setData(documentData) { (error) in
             hud.dismiss()

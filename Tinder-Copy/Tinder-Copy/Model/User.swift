@@ -27,9 +27,9 @@ struct User: ProducesCardViewModel{
         self.name = dictionary["fullName"] as? String ?? ""
         self.age = dictionary["age"] as? Int ?? 18
         self.profession = dictionary["profession"] as? String ?? ""
-        self.imageUrl1 = dictionary["imageUrl1"] as? String ?? ""
-        self.imageUrl2 = dictionary["imageUrl2"] as? String ?? ""
-        self.imageUrl3 = dictionary["imageUrl3"] as? String ?? ""
+        self.imageUrl1 = dictionary["imageUrl1"] as? String ?? nil
+        self.imageUrl2 = dictionary["imageUrl2"] as? String ?? nil
+        self.imageUrl3 = dictionary["imageUrl3"] as? String ?? nil
         self.uid = dictionary["uid"] as? String ?? ""
         self.minSeekingAge = dictionary["minSeekingAge"] as? Int ?? 18
         self.maxSeekingAge = dictionary["maxSeekingAge"] as? Int ?? 50

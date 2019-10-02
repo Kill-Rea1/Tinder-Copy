@@ -75,6 +75,9 @@ class LoginController: UIViewController {
         setupLayout()
         setupLoginViewModelObserver()
         setupTapGesture()
+        if #available(iOS 13.0, *) {
+            isModalInPresentation = true
+        }
     }
     
     override func viewWillDisappear(_ animated: Bool) {

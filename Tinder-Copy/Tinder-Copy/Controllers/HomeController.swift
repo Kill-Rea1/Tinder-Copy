@@ -33,8 +33,8 @@ class HomeController: UIViewController {
         fetchCurrentUser()
     }
     
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
         if Auth.auth().currentUser == nil {
             let loginController = LoginController()
             loginController.delegate = self
@@ -279,5 +279,14 @@ extension HomeController: SettingsControllerDelegate, LoginControllerDelegate, C
     
     func didSaveSettings() {
         fetchCurrentUser()
+    }
+    
+    func didLogout() {
+        if Auth.auth().currentUser == nil {
+            let loginController = LoginController()
+            loginController.delegate = self
+            let navController = UINavigationController(rootViewController: loginController)
+            present(navController, animated: true)
+        }
     }
 }
