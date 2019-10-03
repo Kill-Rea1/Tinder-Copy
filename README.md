@@ -10,7 +10,7 @@ There are technologies which were used for this:
  - SDWebImage for caching images;
  - MVVM, MVC Architectures;
  - A bit of reactive programming RxSwift;
- - UI is written using Autolayout withous interface builders.
+ - UI is written using Autolayout without interface builders.
  
 ### Some screenshots
 
